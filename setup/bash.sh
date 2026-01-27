@@ -20,9 +20,21 @@ warn() { echo -e "\n[!] $*\n" >&2; }
 die() { echo -e "\n[✗] $*\n" >&2; exit 1; }
 
 ensure_termux_storage() {
-  if [ ! -d "/sdcard" ]; then
-    log "Request storage permission (termux-setup-storage)..."
+  # Check if we can write to /sdcard (implies storage permission)
+  if [ ! -w "/sdcard" ] && [ ! -d "$HOME/storage" ]; then
+    log "Requesting storage permission (termux-setup-storage)..."
     termux-setup-storage
+    
+    # Wait for permission (loop check)
+    log "Waiting for storage permission..."
+    for i in {1..20}; do
+      if [ -w "/sdcard" ] || [ -d "$HOME/storage/shared" ]; then
+        log "Storage permission granted."
+        return
+      fi
+      sleep 1
+    done
+    warn "Storage permission might not have been granted (timeout)."
   fi
 }
 
