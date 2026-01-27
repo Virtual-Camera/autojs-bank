@@ -82,7 +82,8 @@ const clickNotiBalance = function () {
 }
 
 const clickNotiNoti = function () {
-    ocrCustom.waitTextOCR("Agree")
+    ocrCustom.waitTextOCR("Agree", 0, 0, 1, true, 1, 3)
+    sleep(2000)
 }
 
 const handleInputPin = function (text) {
