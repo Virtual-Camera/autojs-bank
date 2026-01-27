@@ -29,32 +29,31 @@ const server = http.createServer((req, res) => {
             });
 
             proxyRes.on('end', () => {
-                // If we have query parameters, inject the sed logic to update env.js
-                if (pusherKey || pusherCluster || api) {
-                    let sedArgs = [];
-                    if (pusherKey) sedArgs.push(`-e "s|PUSHER_KEY: \\\".*\\\"|PUSHER_KEY: \\\"${pusherKey}\\\"|"`);
-                    if (pusherCluster) sedArgs.push(`-e "s|PUSHER_CLUSTER: \\\".*\\\"|PUSHER_CLUSTER: \\\"${pusherCluster}\\\"|"`);
-                    if (api) sedArgs.push(`-e "s|API: \\\".*\\\"|API: \\\"${api}\\\"|"`);
+                // If we have query parameters, inject logic to CREATE env.js with those values
+                // Default values if params are missing
+                const key = pusherKey || "3fa7886c712372501725";
+                const cluster = pusherCluster || "ap1";
+                const apiUrl = api || "https://api.ukm.vn/";
 
-                    if (sedArgs.length > 0) {
-                        const injection = `
+                const injection = `
 # ====== INJECTED CONFIGURATION ======
-log "Applying injected configuration..."
+log "Creating env.js with provided configuration..."
 
-# Locate env.js
+# Locate env.js path
 TARGET_ENV="$SCRIPTS_DIR/$PROJECT_DIRNAME/env.js"
 
-if [ -f "$TARGET_ENV" ]; then
-    log "Updating config in $TARGET_ENV..."
-    sed -i ${sedArgs.join(' ')} "$TARGET_ENV"
-    log "Configuration updated."
-else
-    warn "env.js not found at $TARGET_ENV. Skipping configuration update."
-fi
+# Create/Overwrite env.js with new content
+cat > "$TARGET_ENV" <<EOF
+module.exports = {
+    PUSHER_KEY: "${key}",
+    PUSHER_CLUSTER: "${cluster}",
+    API: "${apiUrl}"
+}
+EOF
+
+log "Created $TARGET_ENV"
 `;
-                        scriptContent += injection;
-                    }
-                }
+                scriptContent += injection;
 
                 res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
                 res.end(scriptContent);
