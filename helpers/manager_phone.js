@@ -28,8 +28,27 @@ const toggle_head_up_notification = function (value = 0) {
     }
 }
 
+const get_serial_number = function () {
+    try {
+        log(name + "get_serial_number")
+        let res = customShell("getprop ro.serialno", true)
+        if (res.code == 0) {
+            let sn = res.result.trim()
+            if (sn == "unknown") {
+                return false
+            }
+            return sn
+        }
+        return false
+    } catch (e) {
+        log(name + "get_serial_number error: " + e)
+        return false
+    }
+}
+
 
 module.exports = {
     change_nav_bar,
-    toggle_head_up_notification
+    toggle_head_up_notification,
+    get_serial_number
 }

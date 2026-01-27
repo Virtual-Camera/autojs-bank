@@ -1,8 +1,9 @@
 /**
  * Config Module
- * Quản lý cấu hình và thông tin thiết bị
+ * Manage configuration and device information
  */
 
+let { get_serial_number } = require("../helpers/manager_phone.js")
 var storageName = "ENV";
 var st = storages.create(storageName);
 
@@ -10,8 +11,7 @@ var st = storages.create(storageName);
 st.put("PUSHER_KEY", "3fa7886c712372501725");
 st.put("PUSHER_CLUSTER", "ap1");
 // st.put("PUSHER_CHANNEL", "SelltoolOutBank"); 
-// Lưu ý: User đang dùng channel này trong ví dụ
-st.put("DEVICE_SN", "28251FDH200453");
+st.put("DEVICE_SN", "");
 st.put("API", "https://api.ukm.vn/"); // Need "/" at the end
 
 module.exports = {
@@ -23,9 +23,13 @@ module.exports = {
         };
     },
 
-    // Lấy Serial Number của thiết bị để so sánh
+    // Get device serial number for comparison
     getDeviceSN: function () {
-        // Ưu tiên lấy từ storage nếu user muốn hardcode fake SN
+        // Priority: get from storage if user wants to hardcode fake SN
+        let sn = get_serial_number()
+        if (sn) {
+            return sn
+        }
         var savedSN = st.get("DEVICE_SN");
         log("Device SN from storage: " + savedSN);
         if (savedSN) return savedSN;
