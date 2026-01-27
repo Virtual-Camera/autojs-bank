@@ -77,9 +77,11 @@ sync_repo() {
   log "Repo will be cloned to: $target"
 
   if [ -d "$target/.git" ]; then
-    log "Repo exists -> git pull"
-    git -C "$target" pull --ff-only
-    log "Done: pull updated."
+    log "Repo exists -> force update (reset --hard)..."
+    git -C "$target" fetch origin
+    # Reset to match the remote branch, discarding local changes
+    git -C "$target" reset --hard "origin/$(git -C "$target" rev-parse --abbrev-ref HEAD)"
+    log "Done: repo force updated."
     return
   fi
 
