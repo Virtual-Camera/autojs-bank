@@ -117,7 +117,6 @@ const handleKYC = function (username) {
 const handleTransferSuccess = function () {
     log(name + "handleTransferSuccess, closing app")
     managerApp.closeApp(pkg)
-    this.statusRunning = "stop"
 }
 
 
@@ -149,6 +148,7 @@ VCBClass.prototype.handleClick = function (action) {
             break;
         case "confirm_transfer":
             handleConfirmTransfer()
+            this.statusRunning = "stop"
             break;
         case "kyc":
             handleKYC(this.data_pusher.username)
