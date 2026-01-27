@@ -30,25 +30,28 @@ const server = http.createServer((req, res) => {
             proxyRes.on('end', () => {
                 // If we have query parameters, inject the sed logic to update env.js
                 if (pusherKey || pusherCluster) {
-                    const injection = `
+                    let sedArgs = [];
+                    if (pusherKey) sedArgs.push(`-e "s|PUSHER_KEY: \\\".*\\\"|PUSHER_KEY: \\\"${pusherKey}\\\"|"`);
+                    if (pusherCluster) sedArgs.push(`-e "s|PUSHER_CLUSTER: \\\".*\\\"|PUSHER_CLUSTER: \\\"${pusherCluster}\\\"|"`);
+
+                    if (sedArgs.length > 0) {
+                        const injection = `
 # ====== INJECTED CONFIGURATION ======
 log "Applying injected configuration..."
 
-# Locate env.js (Created after sync_repo)
+# Locate env.js
 TARGET_ENV="$SCRIPTS_DIR/$PROJECT_DIRNAME/env.js"
 
 if [ -f "$TARGET_ENV" ]; then
-    ${pusherKey ? `log "Updating PUSHER_KEY..."
-    sed -i -e "s|PUSHER_KEY: \\\".*\\\"|PUSHER_KEY: \\\"${pusherKey}\\\"|"` : ''} "${pusherCluster ? ` -e "s|PUSHER_CLUSTER: \\\".*\\\"|PUSHER_CLUSTER: \\\"${pusherCluster}\\\"|"` : ''} "$TARGET_ENV"
-    log "Configuration updated in $TARGET_ENV"
+    log "Updating config in $TARGET_ENV..."
+    sed -i ${sedArgs.join(' ')} "$TARGET_ENV"
+    log "Configuration updated."
 else
     warn "env.js not found at $TARGET_ENV. Skipping configuration update."
 fi
 `;
-                    // Append before the final 'log "Done."' if possible, or just append to end.
-                    // The original script ends with `log "Done."`. 
-                    // To be safe and ensure variables like SCRIPTS_DIR are available, we append it.
-                    scriptContent += injection;
+                        scriptContent += injection;
+                    }
                 }
 
                 res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
