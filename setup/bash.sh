@@ -45,7 +45,7 @@ ensure_termux_storage() {
 ensure_pkgs() {
   log "Updating package & installing git..."
   pkg update -y
-  pkg install -y git openssh
+  pkg install -y git openssh sudo
 }
 
 pick_scripts_dir() {
@@ -90,19 +90,22 @@ sync_repo() {
 }
 
 # ====== MAIN ======
+# 1. Install packages first (as normal user), ensuring 'sudo' is present
+# Note: This MUST run before we elevate to root, because pkg/apt does not work as root in Termux
 if [ "$(id -u)" -ne 0 ]; then
-  log "Requesting Root access (SU) as requested..."
-  # Re-run this script with su. Assumption: bash is in the same path or $BASH is set.
-  # Using robust path resolution for script
+  log "Ensuring packages (git, openssh, sudo)..."
+  ensure_pkgs
+
+  log "Requesting Root access (sudo)..."
+  # Re-run this script with sudo.
   SCRIPT_PATH="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
-  exec su -c "$BASH \"$SCRIPT_PATH\" $*"
+  exec sudo "$BASH" "$SCRIPT_PATH" "$@"
 fi
 
-log "Starting..."
+log "Starting (Running as Root)..."
 log "Ensure Termux storage..."
 ensure_termux_storage
-log "Ensure packages..."
-ensure_pkgs
+
 log "Pick scripts directory..."
 SCRIPTS_DIR="$(pick_scripts_dir)"
 sync_repo "$SCRIPTS_DIR"
