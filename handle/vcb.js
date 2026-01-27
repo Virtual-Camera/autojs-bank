@@ -85,8 +85,6 @@ const clickNotiNoti = function () {
 }
 
 const handleInputPin = function (text) {
-    log("SLEEEEEEEEEEEEPPPPPPPPPPPPPPP")
-    return
     _ = customShell("input text " + text)
     log(name + "handleInputPin: " + text + " result: " + _)
     clickCustom.clickPct(50, 38, true)
