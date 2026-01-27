@@ -1,0 +1,17 @@
+{
+  "name": "autojs-bank",
+  "version": "1.0.0",
+  "main": "pusher_relay.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "pusher-js": "^8.4.0",
+    "ws": "^8.19.0"
+  }
+}
