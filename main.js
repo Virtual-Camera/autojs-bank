@@ -2,6 +2,7 @@
  * Main Script
  * Entry point for app
  */
+let ENV = require("./env.js");
 log("====================================================")
 var Config = require("./modules/config.js");
 var WSClient = require("./modules/websocket.js");
@@ -28,6 +29,7 @@ var config = Config.getPusherConfig();
 var mySN = Config.getDeviceSN();
 
 log("=== AUTO BANKING CLIENT start ===");
+log("API: " + ENV.API);
 log("Key: " + config.key);
 log("Cluster: " + config.cluster);
 log("Channel: " + config.channel);

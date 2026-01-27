@@ -4,6 +4,8 @@ adb shell mkdir -p /sdcard/Scripts/AutoBank/modules
 
 adb push main.js /sdcard/Scripts/AutoBank/
 
+adb push env.js /sdcard/Scripts/AutoBank/
+
 adb push modules /sdcard/Scripts/AutoBank/
 
 adb push handle /sdcard/Scripts/AutoBank/

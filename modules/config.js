@@ -2,24 +2,29 @@
  * Config Module
  * Manage configuration and device information
  */
-
+// const ENV = require("../env.js");
 let { get_serial_number } = require("../helpers/manager_phone.js")
 var storageName = "ENV";
 var st = storages.create(storageName);
 
 // Default config
-st.put("PUSHER_KEY", "3fa7886c712372501725");
-st.put("PUSHER_CLUSTER", "ap1");
-// st.put("PUSHER_CHANNEL", "SelltoolOutBank"); 
+st.put("PUSHER_KEY", ENV.PUSHER_KEY);
+st.put("PUSHER_CLUSTER", ENV.PUSHER_CLUSTER);
 st.put("DEVICE_SN", "");
-st.put("API", "https://api.ukm.vn/"); // Need "/" at the end
+// Check / in end line
+let _ = ENV.API
+if (_[_.length - 1] !== "/") {
+    _ += "/"
+}
+st.put("API", _); // Need "/" at the end
 
 module.exports = {
     getPusherConfig: function () {
         return {
-            key: st.get("PUSHER_KEY"),
-            cluster: st.get("PUSHER_CLUSTER"),
-            channel: st.get("PUSHER_CHANNEL") || "SelltoolOutBank"
+            key: ENV.PUSHER_KEY,
+            cluster: ENV.PUSHER_CLUSTER,
+            // channel: st.get("PUSHER_CHANNEL") || "SelltoolOutBank"
+            channel: "SelltoolOutBank"
         };
     },
 
