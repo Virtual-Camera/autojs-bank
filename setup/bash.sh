@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # ====== CẤU HÌNH ======
-REPO_URL="https://github.com/Virtual-Camera/autojs-bank.git"   # <-- sửa link repo của bạn
-PROJECT_DIRNAME="AutoBank"          # <-- tên thư mục sẽ tạo trong scripts
+REPO_URL="https://github.com/Virtual-Camera/autojs-bank.git"
+PROJECT_DIRNAME="AutoBank"
 
 # Auto.js scripts path (hay dùng nhất)
 AUTOJS_SCRIPTS_DIR="/sdcard/Scripts"
