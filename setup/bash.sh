@@ -70,6 +70,9 @@ sync_repo() {
   local scripts_dir="$1"
   local target="$scripts_dir/$PROJECT_DIRNAME"
 
+  # Fix "dubious ownership" error in shared storage
+  git config --global --add safe.directory "*"
+
   log "Scripts directory: $scripts_dir"
   log "Repo will be cloned to: $target"
 
