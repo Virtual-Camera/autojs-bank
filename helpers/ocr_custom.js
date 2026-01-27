@@ -37,9 +37,11 @@ let waitTextOCR = function (text, xOffset = 0, yOffset = 0, needFound = 1, click
         let found = 0
         for (let i = 0; i < timeout; i++) {
             log("Wait text: " + text + " count: " + i + "found:" + found + " needFound:" + needFound)
-            images.requestScreenCapture();
-            let img = images.captureScreen();
-            let results = ocr.detect(img);
+            // images.requestScreenCapture();
+            // let img = images.captureScreen();
+            // let results = ocr.detect(img);
+            _ = customShell.customShell("screencap -p /sdcard/tempscreen.png")
+            let results = ocr.detect("/sdcard/tempscreen.png");
             let target = results.find(item => item.label.includes(text));
             if (target) {
                 found++
