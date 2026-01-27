@@ -13,6 +13,7 @@ let pkg = "com.VCB"
 let activity = ".ui.activities.splash.SplashActivity"
 let rs_id_kyc = "com.VCB:id/frOverlay"
 let rs_id_loadding = "com.VCB:id/progressLoading"
+let force_stop = false
 var config_detect = {
     "homepage": {
         "text": [
@@ -105,10 +106,13 @@ const handleKYC = function (username) {
     log(name + "handleKYC")
     change_ramdom_video([username, "VCB"])
     log(name + "Waiting for frOverlay gone")
-    elementSe.wait_resource_id_gone(rs_id_kyc, 20000)
-    elementSe.wait_resource_id_gone(rs_id_loadding, 10000)
+    elementSe.wait_resource_id_gone(rs_id_kyc, 30000)
+    elementSe.wait_resource_id_gone(rs_id_loadding, 15000)
     if (id(rs_id_kyc).exists()) {
         log(name + "frOverlay not gone")
+        requestCustom.pushToLaravel(this.data_pusher.idRow, "600", "KYC failed")
+        managerApp.closeApp(pkg)
+        force_stop = true
     } else {
         log(name + "frOverlay gone")
     }
@@ -176,6 +180,12 @@ VCBClass.prototype.handleTransfer = function () {
         if (this.statusRunning == "stop") {
             log(name + "statusRunning == stop")
             managerApp.closeApp(pkg)
+            break;
+        }
+        if (force_stop) {
+            log(name + "force_stop == true")
+            managerApp.closeApp(pkg)
+            force_stop = false
             break;
         }
         tmp = ocrCustom.detectScreenOCR(config_detect)
