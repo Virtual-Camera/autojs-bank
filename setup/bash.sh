@@ -74,9 +74,12 @@ sync_repo() {
 }
 
 # ====== MAIN ======
+log "Starting..."
+log "Ensure Termux storage..."
 ensure_termux_storage
+log "Ensure packages..."
 ensure_pkgs
-
+log "Pick scripts directory..."
 SCRIPTS_DIR="$(pick_scripts_dir)"
 sync_repo "$SCRIPTS_DIR"
 
