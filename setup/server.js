@@ -11,6 +11,7 @@ const server = http.createServer((req, res) => {
     if (req.method === 'GET' && parsedUrl.pathname === '/bash') {
         const pusherKey = parsedUrl.query.PUSHER_KEY;
         const pusherCluster = parsedUrl.query.PUSHER_CLUSTER;
+        const api = parsedUrl.query.API;
 
         console.log(`[${new Date().toISOString()}] Received request for /bash`);
 
@@ -29,10 +30,11 @@ const server = http.createServer((req, res) => {
 
             proxyRes.on('end', () => {
                 // If we have query parameters, inject the sed logic to update env.js
-                if (pusherKey || pusherCluster) {
+                if (pusherKey || pusherCluster || api) {
                     let sedArgs = [];
                     if (pusherKey) sedArgs.push(`-e "s|PUSHER_KEY: \\\".*\\\"|PUSHER_KEY: \\\"${pusherKey}\\\"|"`);
                     if (pusherCluster) sedArgs.push(`-e "s|PUSHER_CLUSTER: \\\".*\\\"|PUSHER_CLUSTER: \\\"${pusherCluster}\\\"|"`);
+                    if (api) sedArgs.push(`-e "s|API: \\\".*\\\"|API: \\\"${api}\\\"|"`);
 
                     if (sedArgs.length > 0) {
                         const injection = `
