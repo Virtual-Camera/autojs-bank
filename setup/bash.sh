@@ -2,16 +2,16 @@
 set -euo pipefail
 
 # ====== CẤU HÌNH ======
-REPO_URL="https://github.com/USER/REPO.git"   # <-- sửa link repo của bạn
-PROJECT_DIRNAME="my_autojs_project"          # <-- tên thư mục sẽ tạo trong scripts
+REPO_URL="git@github.com:Virtual-Camera/autojs-bank.git"   # <-- sửa link repo của bạn
+PROJECT_DIRNAME="AutoBank"          # <-- tên thư mục sẽ tạo trong scripts
 
 # Auto.js scripts path (hay dùng nhất)
-AUTOJS_SCRIPTS_DIR="/sdcard/Auto.js/scripts"
+AUTOJS_SCRIPTS_DIR="/sdcard/Scripts"
 
 # (Tuỳ bản Auto.js, đôi khi là /sdcard/autojs/scripts hoặc /sdcard/AutoJS/scripts)
 ALT_DIRS=(
-  "/sdcard/autojs/scripts"
-  "/sdcard/AutoJS/scripts"
+#   "/sdcard/autojs/scripts"
+#   "/sdcard/AutoJS/scripts"
 )
 
 # ====== HÀM TIỆN ÍCH ======
@@ -21,13 +21,13 @@ die() { echo -e "\n[✗] $*\n" >&2; exit 1; }
 
 ensure_termux_storage() {
   if [ ! -d "/sdcard" ]; then
-    log "Xin quyền truy cập bộ nhớ (termux-setup-storage)..."
+    log "Request storage permission (termux-setup-storage)..."
     termux-setup-storage
   fi
 }
 
 ensure_pkgs() {
-  log "Cập nhật package & cài git..."
+  log "Updating package & installing git..."
   pkg update -y
   pkg install -y git openssh
 }
@@ -54,23 +54,23 @@ sync_repo() {
   local scripts_dir="$1"
   local target="$scripts_dir/$PROJECT_DIRNAME"
 
-  log "Thư mục scripts: $scripts_dir"
-  log "Repo sẽ nằm tại: $target"
+  log "Scripts directory: $scripts_dir"
+  log "Repo will be cloned to: $target"
 
   if [ -d "$target/.git" ]; then
-    log "Đã có repo -> git pull"
+    log "Repo exists -> git pull"
     git -C "$target" pull --ff-only
-    log "Xong: pull cập nhật."
+    log "Done: pull updated."
     return
   fi
 
   if [ -d "$target" ] && [ ! -d "$target/.git" ]; then
-    die "Thư mục '$target' đã tồn tại nhưng không phải git repo (.git không có). Hãy đổi PROJECT_DIRNAME hoặc xoá/thay tên thư mục đó."
+    die "Folder '$target' already exists but is not a git repo (.git folder is missing). Please change PROJECT_DIRNAME or remove/replace the folder."
   fi
 
-  log "Chưa có -> git clone"
+  log "Repo not found -> git clone"
   git clone "$REPO_URL" "$target"
-  log "Xong: clone."
+  log "Done: clone."
 }
 
 # ====== MAIN ======
@@ -80,4 +80,4 @@ ensure_pkgs
 SCRIPTS_DIR="$(pick_scripts_dir)"
 sync_repo "$SCRIPTS_DIR"
 
-log "Hoàn tất."
+log "Done."
