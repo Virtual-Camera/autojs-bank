@@ -20,6 +20,10 @@ warn() { echo -e "\n[!] $*\n" >&2; }
 die() { echo -e "\n[✗] $*\n" >&2; exit 1; }
 
 ensure_termux_storage() {
+  if [ "$(id -u)" -eq 0 ]; then
+    log "Running as Root (SU): Skipping termux-setup-storage checks."
+    return
+  fi
   # Check if we can write to /sdcard (implies storage permission)
   if [ ! -w "/sdcard" ] && [ ! -d "$HOME/storage" ]; then
     log "Requesting storage permission (termux-setup-storage)..."
@@ -86,6 +90,14 @@ sync_repo() {
 }
 
 # ====== MAIN ======
+if [ "$(id -u)" -ne 0 ]; then
+  log "Requesting Root access (SU) as requested..."
+  # Re-run this script with su. Assumption: bash is in the same path or $BASH is set.
+  # Using robust path resolution for script
+  SCRIPT_PATH="$(cd "$(dirname "$0")" && pwd)/$(basename "$0")"
+  exec su -c "$BASH \"$SCRIPT_PATH\" $*"
+fi
+
 log "Starting..."
 log "Ensure Termux storage..."
 ensure_termux_storage
