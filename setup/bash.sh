@@ -43,6 +43,16 @@ ensure_termux_storage() {
 }
 
 ensure_pkgs() {
+  if command -v git >/dev/null 2>&1 && command -v ssh >/dev/null 2>&1; then
+    log "git and openssh are already installed."
+    # Ensure sudo is present as it is required for permission elevation
+    if ! command -v sudo >/dev/null 2>&1; then
+       log "Installing sudo..."
+       pkg install -y sudo
+    fi
+    return
+  fi
+
   log "Updating package & installing git..."
   pkg update -y
   pkg install -y git openssh sudo
