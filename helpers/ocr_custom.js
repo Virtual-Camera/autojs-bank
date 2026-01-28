@@ -7,7 +7,7 @@ function norm(s) {
         .toLowerCase()
         .replace(/\s+/g, ""); // bỏ khoảng trắng
 }
-let arraySmallInArrayBig = function (arraySmall, arrayBig) {
+let arraySmallInArrayBig = function (arraySmall, arrayBig, needFound = false) {
     try {
         let res = true
         let lengthSmall = arraySmall.length
@@ -19,6 +19,11 @@ let arraySmallInArrayBig = function (arraySmall, arrayBig) {
             log(name + "arraySmallInArrayBig: " + ok + "text1: " + text1)
             if (ok) {
                 countFound++
+            }
+        }
+        if (needFound) {
+            if (countFound >= needFound) {
+                return true
             }
         }
         if (countFound < lengthSmall) {
@@ -76,22 +81,22 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10) {
             let results = ocr("/sdcard/tempscreen.png");
             log(name + "Detect screen OCR, i: " + i)
             // log(results)
-            for (let name in config) {
-                text = config[name]['text']
-                not_text = config[name]['not_text'] ?? []
+            for (let key in config) {
+                text = config[key]['text']
+                not_text = config[key]['not_text'] ?? []
                 let ok = arraySmallInArrayBig(text, results)
 
                 log("match =", ok);
                 if (ok) {
                     if (not_text.length > 0) {
-                        log(name + "Check not_text")
-                        let not_ok = arraySmallInArrayBig(not_text, results)
+                        log(name + " Check not_text: " + not_text)
+                        let not_ok = arraySmallInArrayBig(not_text, results, 1)
                         if (not_ok) {
                             log(name + "not_ok")
                             continue
                         }
                     }
-                    resFound = name
+                    resFound = key
                     countFound++
                     break
                 }
