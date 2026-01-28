@@ -40,8 +40,10 @@ let waitTextOCR = function (text, xOffset = 0, yOffset = 0, needFound = 1, click
             // images.requestScreenCapture();
             // let img = images.captureScreen();
             // let results = ocr.detect(img);
-            _ = customShell.customShell("screencap -p /sdcard/tempscreen.png")
-            let results = ocr.detect("/sdcard/tempscreen.png");
+            path = "/sdcard/tempscreen.png"
+            _ = customShell.customShell("screencap -p " + path)
+            let img = images.read(path);
+            let results = ocr.detect(img);
             let target = results.find(item => item.label.includes(text));
             if (target) {
                 found++
