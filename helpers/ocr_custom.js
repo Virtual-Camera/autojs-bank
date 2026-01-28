@@ -7,23 +7,18 @@ function norm(s) {
         .toLowerCase()
         .replace(/\s+/g, ""); // bỏ khoảng trắng
 }
-let arraySmallInArrayBig = function (arraySmall, arrayBig, needFound = false) {
+let arraySmallInArrayBig = function (arraySmall, arrayBig) {
     try {
         let res = true
         let lengthSmall = arraySmall.length
         let countFound = 0
-        log(name + "arraySmallInArrayBig: " + JSON.stringify(arraySmall) + " " + JSON.stringify(arrayBig))
+        // log(name + "arraySmallInArrayBig: " + JSON.stringify(arraySmall) + " " + JSON.stringify(arrayBig))
         for (let x in arraySmall) {
             let text1 = arraySmall[x]
             let ok = arrayBig.some(x => norm(x).includes(norm(text1)));
             log(name + "arraySmallInArrayBig: " + ok + "text1: " + text1)
             if (ok) {
                 countFound++
-            }
-        }
-        if (needFound) {
-            if (countFound >= needFound) {
-                return true
             }
         }
         if (countFound < lengthSmall) {
@@ -80,7 +75,7 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10) {
             _ = customShell.customShell("screencap -p /sdcard/tempscreen.png")
             let results = ocr("/sdcard/tempscreen.png");
             log(name + "Detect screen OCR, i: " + i)
-            // log(results)
+            log(name + "Detect screen OCR, results: " + JSON.stringify(results))
             for (let key in config) {
                 text = config[key]['text']
                 not_text = config[key]['not_text'] ?? []
@@ -89,18 +84,26 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10) {
                 log("match =", ok);
                 if (ok) {
                     if (not_text.length > 0) {
-                        log(name + " Check not_text: " + not_text)
-                        let not_ok = arraySmallInArrayBig(not_text, results, 1)
-                        if (not_ok) {
-                            log(name + "not_ok")
-                            continue
-                        }
+                        // log(name + " Check not_text: " + not_text)
+                        // let not_ok = arraySmallInArrayBig(not_text, results, 1)
+                        // if (not_ok) {
+                        //     log(name + "not_ok")
+                        //     continue
+                        // }
+                        not_text.forEach(arr => {
+                            let not_ok = arraySmallInArrayBig(arr, results, 1)
+                            if (not_ok) {
+                                log(name + "not_ok")
+                                ok = false
+                            }
+                        });
                     }
-                    resFound = key
-                    countFound++
-                    break
+                    if (ok) {
+                        resFound = key
+                        countFound++
+                        break
+                    }
                 }
-
             }
             if (countFound >= needFound) {
                 log(name + "Break because countFound >= needFound")

@@ -30,7 +30,8 @@ var config_detect = {
             "Agree", "Reject"
         ],
         "not_text": [
-            "Close", "OTP", "PIN"
+            ["OTP", "PIN"],
+            ["Close"]
         ]
     },
     "transfer_expired": {
@@ -53,7 +54,7 @@ var config_detect = {
             "Confirm"
         ],
         "not_text": [
-            "Success"
+            ["Success", "Close"]
         ]
     },
     "transfer_success": {
