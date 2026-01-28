@@ -30,7 +30,7 @@ var config_detect = {
             "Agree", "Reject"
         ],
         "not_text": [
-            "Close"
+            "Close", "OTP", "PIN"
         ]
     },
     "transfer_expired": {
