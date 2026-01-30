@@ -8,6 +8,7 @@ const DEBOUNCE_MS = 1000;
 
 let debounceTimer = null;
 let isDeploying = false;
+let last_deploy = 0;
 
 console.log(`Analyzing project structure...`);
 console.log(`Watching for file changes to run ${DEPLOY_SCRIPT}...`);
@@ -15,7 +16,12 @@ console.log(`Watching for file changes to run ${DEPLOY_SCRIPT}...`);
 // Hàm chạy deploy.bat
 function runDeploy() {
     if (isDeploying) return;
+    if (Date.now() - last_deploy < 10000) {
+        console.log(`\n[${new Date().toLocaleTimeString()}] Deploy is running...`);
+        return;
+    }
     isDeploying = true;
+    last_deploy = Date.now();
 
     console.log(`\n[${new Date().toLocaleTimeString()}] Change detected. Running deploy...`);
 
