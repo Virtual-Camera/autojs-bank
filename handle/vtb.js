@@ -151,7 +151,7 @@ VTBClass.prototype.handleTransfer = function () {
         change_ramdom_video([this.data_pusher.username, "VTB"])
         count_fake_camera += 1
         sleepCustom(2000)
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 10; i++) {
             sleepCustom(1000)
             if (this.statusRunning == "stop") {
                 log(name + "statusRunning == stop")
