@@ -11,7 +11,7 @@ let closeApp = function (pkg) {
         return false
     }
 }
-let openApp = function (pkg, activity, close = true) {
+let openApp = function (pkg, activity = "", close = true, useMonkey = false) {
     try {
         log(name + "openApp: clearing video camera")
         change_video_camera("clear")
@@ -19,12 +19,17 @@ let openApp = function (pkg, activity, close = true) {
         if (close) {
             closeApp(pkg)
         }
-        customShell("am start -n " + pkg + "/" + activity, true)
+        if (useMonkey) {
+            customShell("monkey -p " + pkg + " 1")
+        } else {
+            customShell("am start -n " + pkg + "/" + activity)
+        }
     } catch (e) {
         log(name + "openApp error: " + e)
         return false
     }
 }
+
 module.exports = {
     closeApp,
     openApp

@@ -7,16 +7,24 @@ function norm(s) {
         .toLowerCase()
         .replace(/\s+/g, ""); // bỏ khoảng trắng
 }
-let arraySmallInArrayBig = function (arraySmall, arrayBig) {
+
+function removeAccents(str) {
+    return str
+        .normalize('NFD')                     // Tách dấu khỏi chữ cái
+        .replace(/[\u0300-\u036f]/g, '')      // Xóa các ký tự dấu phụ
+        .replace(/đ/g, 'd').replace(/Đ/g, 'D'); // Xử lý riêng chữ đ vì NFD không tách được
+}
+let arraySmallInArrayBig = function (arraySmall, arrayBig, print_log = false) {
     try {
         let res = true
         let lengthSmall = arraySmall.length
         let countFound = 0
-        // log(name + "arraySmallInArrayBig: " + JSON.stringify(arraySmall) + " " + JSON.stringify(arrayBig))
         for (let x in arraySmall) {
             let text1 = arraySmall[x]
             let ok = arrayBig.some(x => norm(x).includes(norm(text1)));
-            log(name + "arraySmallInArrayBig: " + ok + "text1: " + text1)
+            if (print_log) {
+                log(name + "arraySmallInArrayBig: " + ok + "text1: " + text1)
+            }
             if (ok) {
                 countFound++
             }
@@ -67,13 +75,15 @@ let waitTextOCR = function (text, xOffset = 0, yOffset = 0, needFound = 1, click
     }
 }
 
-let detectScreenOCR = function (config, needFound = 1, maxLoop = 10) {
+let detectScreenOCR = function (config, needFound = 1, maxLoop = 10, print_log = false) {
     try {
         countFound = 0
         resFound = false
         for (let i = 0; i < maxLoop; i++) {
             _ = customShell.customShell("screencap -p /sdcard/tempscreen.png")
             let results = ocr("/sdcard/tempscreen.png");
+            results = removeAccents(JSON.stringify(results))
+            results = JSON.parse(results)
             log(name + "Detect screen OCR, i: " + i)
             log(name + "Detect screen OCR, results: " + JSON.stringify(results))
             for (let key in config) {
@@ -81,7 +91,9 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10) {
                 not_text = config[key]['not_text'] ?? []
                 let ok = arraySmallInArrayBig(text, results)
 
-                log("match =", ok);
+                if (print_log) {
+                    log("match =", ok);
+                }
                 if (ok) {
                     if (not_text.length > 0) {
                         // log(name + " Check not_text: " + not_text)
@@ -116,6 +128,7 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10) {
         return resFound
     } catch (e) {
         log(name + "detectScreenOCR: " + e)
+        log(e.stack)
         return false
     }
 }
