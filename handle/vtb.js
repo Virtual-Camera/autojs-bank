@@ -73,93 +73,93 @@ VTBClass = function (data_pusher) {
         this.statusRunning = ""
         this.id_row = data_pusher['idRow']
     } catch (error) {
-        log(name + "Error constructor: " + error)
-        log(error.stack)
+        LogRelay(name + "Error constructor: " + error)
+        LogRelay(error.stack)
     }
 }
 VTBClass.prototype.handleClick = function (action) {
     try {
-        log(name + "handle click: " + action)
+        LogRelay(name + "handle click: " + action)
         switch (action) {
             case "vietnamese":
-                log(name + " Change app language to English")
+                LogRelay(name + " Change app language to English")
                 this.statusRunning = "stop"
                 break;
             case "popup_confirm":
-                log(name + " Action popup confirm")
+                LogRelay(name + " Action popup confirm")
                 clickCustom.clickPct(80, 58, true)
                 break;
             case "tab_profile":
-                log(name + " Click tab profile")
+                LogRelay(name + " Click tab profile")
                 clickCustom.clickPct(50, 40, true)
                 sleepCustom(1000)
                 break;
             case "homepage":
-                log(name + " Action homepage")
+                LogRelay(name + " Action homepage")
                 clickCustom.clickPct(90, 95, true)
                 sleepCustom(1000)
                 break;
             case "confirm_transfer":
-                log(name + " Action confirm transfer")
+                LogRelay(name + " Action confirm transfer")
                 clickCustom.clickPct(80, 93, true)
-                log("WAIT GONEEEEEEEEEEEEEEEE")
+                LogRelay("WAIT GONEEEEEEEEEEEEEEEE")
                 elementSe.wait_gone_id(elmLoading)
-                log("WAIT GONEEEEEEEEEEEEEEEE22222222222222")
+                LogRelay("WAIT GONEEEEEEEEEEEEEEEE22222222222222")
 
                 break;
             case "tab_login":
-                log(name + " Action tab login")
+                LogRelay(name + " Action tab login")
                 managerApp.openApp(pkg, "", true, true)
                 sleepCustom(3000)
-                log("?????????????????????????????????")
+                LogRelay("?????????????????????????????????")
                 this.statusRunning = "stop"
                 break;
             case "success_transfer":
-                log(name + " Action success transfer")
-                requestCustom.setStatusTransferLog(this.id_row, "705")
+                LogRelay(name + " Action success transfer")
+                requestCustom.transferLogSet(this.id_row, "705")
                 this.statusRunning = "stop"
                 break;
             case "kyc":
-                log(name + " Action kyc")
+                LogRelay(name + " Action kyc")
                 elementSe.wait_gone_id("com.vietinbank.ipay:id/fFacePayCamera", 20000)
                 break;
 
         }
     } catch (error) {
-        log(name + "Error handleClick: " + error)
-        log(error.stack)
+        LogRelay(name + "Error handleClick: " + error)
+        LogRelay(error.stack)
     }
 }
 VTBClass.prototype.handleTransfer = function () {
     try {
-        log(name + "Handle transfer");
+        LogRelay(name + "Handle transfer");
         managerPhone.change_nav_bar(1)
-        requestCustom.setStatusTransferLog(this.id_row, "111")
+        requestCustom.transferLogSet(this.id_row, "111")
 
-        let data = requestCustom.checkStatusTransferLog(this.id_row, "111", 30000, 30)
+        let data = requestCustom.transferLogCheck(this.id_row, "111", 30000, 30)
         if (!data) {
-            log(name + "data not found 32423ew")
+            LogRelay(name + "data not found 32423ew")
             return
         }
         if (data.status != "700") {
-            log(name + "data status != 700")
+            LogRelay(name + "data status != 700")
             return
         }
-        requestCustom.setStatusTransferLog(this.id_row, "701")
+        requestCustom.transferLogSet(this.id_row, "701")
         let _ = managerApp.openApp(pkg, "", true, true)
-        log(name + "openApp123: " + _)
+        LogRelay(name + "openApp123: " + _)
         change_ramdom_video([this.data_pusher.username, "VTB"])
         count_fake_camera += 1
         sleepCustom(2000)
         for (let i = 0; i < 10; i++) {
             sleepCustom(1000)
             if (this.statusRunning == "stop") {
-                log(name + "statusRunning == stop")
+                LogRelay(name + "statusRunning == stop")
                 managerApp.closeApp(pkg)
                 break;
             }
             if (force_stop) {
-                log(name + "force_stop == true")
+                LogRelay(name + "force_stop == true")
                 managerApp.closeApp(pkg)
                 force_stop = false
                 break;
@@ -170,8 +170,8 @@ VTBClass.prototype.handleTransfer = function () {
 
 
     } catch (error) {
-        log(name + "Error handleTransfer: " + error)
-        log(error.stack)
+        LogRelay(name + "Error handleTransfer: " + error)
+        LogRelay(error.stack)
     }
 }
 

@@ -1,7 +1,9 @@
+let { LogRelay } = require("../modules/log_relay.js");
+let name = "[Element-SE]: "
 const wait_resource_id_gone = function (resource_id, timeout = 10000) {
     start = Date.now()
     while (Date.now() - start < timeout) {
-        log("Waiting for resource id gone: " + resource_id + " timeout: " + (Date.now() - start))
+        LogRelay(name + "Waiting for resource id gone: " + resource_id + " timeout: " + (Date.now() - start))
         sleep(500)
         if (!id(resource_id).exists()) {
             return true
@@ -22,7 +24,7 @@ function wait_any_id(id1, id2, timeout = 10000) {
 function wait_gone_id(resource_id, timeout = 10000) {
     start = Date.now()
     while (Date.now() - start < timeout) {
-        log("Waiting for resource id gone: " + resource_id + " timeout: " + (Date.now() - start))
+        LogRelay(name + "Waiting for resource id gone: " + resource_id + " timeout: " + (Date.now() - start))
         sleep(500)
         if (!id(resource_id).exists()) {
             return true

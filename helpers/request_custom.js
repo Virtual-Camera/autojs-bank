@@ -12,7 +12,7 @@ const pushToLaravel = function (id_row, status, message) {
     };
     let res = http.post(url, data);
     let html = res.body.string();
-    log(html);
+    LogRelay(html);
     return html;
 }
 
@@ -28,7 +28,7 @@ const transferLogGet = function (id_row) {
     return false
 }
 
-const checkStatusTransferLog = function (id_row, now_status = false, timeout = 30000, i = 30) {
+const transferLogCheck = function (id_row, now_status = false, timeout = 30000, i = 30) {
     time_start = Date.now()
     let data = false
     for (let j = 0; j < i; j++) {
@@ -36,7 +36,7 @@ const checkStatusTransferLog = function (id_row, now_status = false, timeout = 3
             break;
         }
         data = transferLogGet(id_row)
-        log(name + "checkStatusTransferLog: " + data.status)
+        LogRelay(name + "transferLogCheck: " + data.status)
         if (now_status) {
             if (data.status != now_status) {
                 return data
@@ -47,21 +47,21 @@ const checkStatusTransferLog = function (id_row, now_status = false, timeout = 3
     return data
 }
 
-const setStatusTransferLog = function (id_row, status) {
+const transferLogSet = function (id_row, status) {
     try {
         let api = Config.getConfig("API");
         let url = api + "api/adb-tool/transfer-log/update?idRow=" + id_row + "&column=status&value=" + status;
         let res = http.get(url);
         let html = res.body.string();
         res = JSON.parse(html);
-        log(name + "setStatusTransferLog: " + html)
+        LogRelay(name + "transferLogSet: " + html)
         if (res.status) {
             return res.data
         }
         return false
     } catch (error) {
-        log(name + "Error setStatusTransferLog: " + error)
-        log(error.stack)
+        LogRelay(name + "Error transferLogSet: " + error)
+        LogRelay(error.stack)
     }
 
 }
@@ -70,6 +70,6 @@ const setStatusTransferLog = function (id_row, status) {
 module.exports = {
     pushToLaravel,
     transferLogGet,
-    checkStatusTransferLog,
-    setStatusTransferLog
+    transferLogCheck,
+    transferLogSet
 }

@@ -4,20 +4,23 @@ let { change_video_camera } = require("../helpers/fake_camera.js")
 let name = "[ManagerApp]: "
 let closeApp = function (pkg) {
     try {
-        log(name + "closeApp: " + pkg)
+        LogRelay(name + "closeApp: " + pkg)
         customShell("am force-stop " + pkg, true)
     } catch (e) {
-        log(name + "closeApp error: " + e)
+        LogRelay(name + "closeApp error: " + e)
         return false
     }
 }
-let openApp = function (pkg, activity = "", close = true, useMonkey = false) {
+let openApp = function (pkg, activity = "", close = true, useMonkey = false, pressHome = true) {
     try {
-        log(name + "openApp: clearing video camera")
+        LogRelay(name + "openApp: clearing video camera")
         change_video_camera("clear")
-        log(name + "openApp: " + pkg + "/" + activity)
+        LogRelay(name + "openApp: " + pkg + "/" + activity)
         if (close) {
             closeApp(pkg)
+        }
+        if (pressHome) {
+            customShell("input keyevent KEYCODE_HOME")
         }
         if (useMonkey) {
             customShell("monkey -p " + pkg + " 1")
@@ -25,7 +28,7 @@ let openApp = function (pkg, activity = "", close = true, useMonkey = false) {
             customShell("am start -n " + pkg + "/" + activity)
         }
     } catch (e) {
-        log(name + "openApp error: " + e)
+        LogRelay(name + "openApp error: " + e)
         return false
     }
 }

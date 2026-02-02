@@ -23,7 +23,7 @@ let arraySmallInArrayBig = function (arraySmall, arrayBig, print_log = false) {
             let text1 = arraySmall[x]
             let ok = arrayBig.some(x => norm(x).includes(norm(text1)));
             if (print_log) {
-                log(name + "arraySmallInArrayBig: " + ok + "text1: " + text1)
+                LogRelay(name + "arraySmallInArrayBig: " + ok + "text1: " + text1)
             }
             if (ok) {
                 countFound++
@@ -34,7 +34,7 @@ let arraySmallInArrayBig = function (arraySmall, arrayBig, print_log = false) {
         }
         return true
     } catch (e) {
-        log(name + "arraySmallInArrayBig: " + e)
+        LogRelay(name + "arraySmallInArrayBig: " + e)
         return false
     }
 
@@ -44,7 +44,7 @@ let waitTextOCR = function (text, xOffset = 0, yOffset = 0, needFound = 1, click
     try {
         let found = 0
         for (let i = 0; i < timeout; i++) {
-            log("Wait text: " + text + " count: " + i + "found:" + found + " needFound:" + needFound)
+            LogRelay("Wait text: " + text + " count: " + i + "found:" + found + " needFound:" + needFound)
             // images.requestScreenCapture();
             // let img = images.captureScreen();
             // let results = ocr.detect(img);
@@ -63,14 +63,14 @@ let waitTextOCR = function (text, xOffset = 0, yOffset = 0, needFound = 1, click
                     }
                     break;
                 } else {
-                    log(name + "Fount < needFound")
+                    LogRelay(name + "Fount < needFound")
                 }
             }
             sleep(1000)
         }
         return false
     } catch (e) {
-        log(name + "waitTextOCR: " + e)
+        LogRelay(name + "waitTextOCR: " + e)
         return false
     }
 }
@@ -84,28 +84,28 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10, print_log =
             let results = ocr("/sdcard/tempscreen.png");
             results = removeAccents(JSON.stringify(results))
             results = JSON.parse(results)
-            log(name + "Detect screen OCR, i: " + i)
-            log(name + "Detect screen OCR, results: " + JSON.stringify(results))
+            LogRelay(name + "Detect screen OCR, i: " + i)
+            LogRelay(name + "Detect screen OCR, results: " + JSON.stringify(results))
             for (let key in config) {
                 text = config[key]['text']
                 not_text = config[key]['not_text'] ?? []
                 let ok = arraySmallInArrayBig(text, results)
 
                 if (print_log) {
-                    log("match =", ok);
+                    LogRelay("match =", ok);
                 }
                 if (ok) {
                     if (not_text.length > 0) {
-                        // log(name + " Check not_text: " + not_text)
+                        // LogRelay(name + " Check not_text: " + not_text)
                         // let not_ok = arraySmallInArrayBig(not_text, results, 1)
                         // if (not_ok) {
-                        //     log(name + "not_ok")
+                        //     LogRelay(name + "not_ok")
                         //     continue
                         // }
                         not_text.forEach(arr => {
                             let not_ok = arraySmallInArrayBig(arr, results, 1)
                             if (not_ok) {
-                                log(name + "not_ok")
+                                LogRelay(name + "not_ok")
                                 ok = false
                             }
                         });
@@ -118,17 +118,17 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10, print_log =
                 }
             }
             if (countFound >= needFound) {
-                log(name + "Break because countFound >= needFound")
+                LogRelay(name + "Break because countFound >= needFound")
                 break;
             }
-            log(name + "countFound: " + countFound + " needFound: " + needFound)
+            LogRelay(name + "countFound: " + countFound + " needFound: " + needFound)
 
         }
-        log(name + "resFound: " + resFound)
+        LogRelay(name + "resFound: " + resFound)
         return resFound
     } catch (e) {
-        log(name + "detectScreenOCR: " + e)
-        log(e.stack)
+        LogRelay(name + "detectScreenOCR: " + e)
+        LogRelay(e.stack)
         return false
     }
 }

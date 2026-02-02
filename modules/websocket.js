@@ -2,6 +2,7 @@
  * WebSocket Client Module
  * Quản lý kết nối, heartbeat và lọc bản tin
  */
+let { LogRelay } = require("../modules/log_relay.js");
 
 var Processor = require("./processor.js");
 
@@ -29,7 +30,7 @@ function connect(config, deviceSN) {
         "&cluster=" + config.cluster +
         "&channel=" + config.channel;
 
-    log("Connecting WS to channel: " + config.channel);
+    LogRelay("Connecting WS to channel: " + config.channel);
 
     try {
         ws = web.newWebSocket(url);
@@ -37,7 +38,7 @@ function connect(config, deviceSN) {
         setupListeners(ws);
 
     } catch (e) {
-        log("Error creating WebSocket: " + e);
+        LogRelay("Error creating WebSocket: " + e);
         isConnecting = false;
         scheduleReconnect();
     }
@@ -45,14 +46,14 @@ function connect(config, deviceSN) {
 
 function setupListeners(socket) {
     socket.on("open", function (res, ws) {
-        log("WS Open: Connected!");
+        LogRelay("WS Open: Connected!");
         isConnecting = false;
         startHeartbeat();
     });
 
     socket.on("text", function (text, ws) {
         if (text === 'pong') {
-            // log("Heartbeat OK");
+            // LogRelay("Heartbeat OK");
             return;
         }
 
@@ -60,46 +61,46 @@ function setupListeners(socket) {
             var json = JSON.parse(text);
 
             // Log raw để debug
-            // log("Raw: " + text);
+            // LogRelay("Raw: " + text);
 
             // Kiểm tra cấu trúc bản tin
             // Cấu trúc mong đợi: { channel, event, data: { customData: { sn: "xxx" } } }
             if (json.data && json.data.customData && json.data.customData.sn) {
                 var receivedSN = json.data.customData.sn;
 
-                log("Received SN: " + receivedSN); // Debug
+                LogRelay("Received SN: " + receivedSN); // Debug
 
                 if (receivedSN === currentDeviceSN) {
-                    log("--> MATCH SN (" + currentDeviceSN + "). Processing...");
+                    LogRelay("--> MATCH SN (" + currentDeviceSN + "). Processing...");
                     // Gọi sang module Processor
                     Processor.handle(json);
                 } else {
-                    log("--> MISMATCH SN. Device SN: " + currentDeviceSN + ", Message SN: " + receivedSN);
+                    LogRelay("--> MISMATCH SN. Device SN: " + currentDeviceSN + ", Message SN: " + receivedSN);
                 }
             } else {
                 // Các tin hệ thống hoặc không đúng format
-                if (json.event) log("Event: " + json.event);
+                if (json.event) LogRelay("Event: " + json.event);
             }
 
         } catch (e) {
-            log("Error parsing JSON: " + e);
+            LogRelay("Error parsing JSON: " + e);
         }
     });
 
     socket.on("closing", function (code, reason, ws) {
-        log("WS Closing: " + reason);
+        LogRelay("WS Closing: " + reason);
         stopHeartbeat();
     });
 
     socket.on("closed", function (code, reason, ws) {
-        log("WS Closed. Reconnecting...");
+        LogRelay("WS Closed. Reconnecting...");
         isConnecting = false;
         stopHeartbeat();
         scheduleReconnect();
     });
 
     socket.on("failure", function (t, res, ws) {
-        log("WS Error: " + t);
+        LogRelay("WS Error: " + t);
         isConnecting = false;
         stopHeartbeat();
         scheduleReconnect();

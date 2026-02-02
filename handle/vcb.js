@@ -89,7 +89,7 @@ const clickNotiNoti = function () {
 
 const handleInputPin = function (text) {
     _ = customShell("input text " + text)
-    log(name + "handleInputPin: " + text + " result: " + _)
+    LogRelay(name + "handleInputPin: " + text + " result: " + _)
     clickCustom.clickPct(50, 38, true)
 }
 
@@ -105,31 +105,31 @@ const handleVietnamese = function () {
 const handleKYC = function (username) {
     start = Date.now()
 
-    log(name + "handleKYC")
+    LogRelay(name + "handleKYC")
     change_ramdom_video([username, "VCB"])
-    log(name + "Waiting for frOverlay gone")
+    LogRelay(name + "Waiting for frOverlay gone")
     elementSe.wait_resource_id_gone(rs_id_kyc, 30000)
     elementSe.wait_resource_id_gone(rs_id_loadding, 15000)
     if (id(rs_id_kyc).exists()) {
-        log(name + "frOverlay not gone")
+        LogRelay(name + "frOverlay not gone")
         requestCustom.pushToLaravel(this.data_pusher.idRow, "600", "KYC failed")
         managerApp.closeApp(pkg)
         force_stop = true
     } else {
-        log(name + "frOverlay gone")
+        LogRelay(name + "frOverlay gone")
     }
 }
 
 const handleTransferSuccess = function () {
-    log(name + "handleTransferSuccess, closing app")
+    LogRelay(name + "handleTransferSuccess, closing app")
     managerApp.closeApp(pkg)
 }
 
 
 VCBClass = function (data_pusher) {
     this.data_pusher = data_pusher
-    log(this.data_pusher.customData.sOTP)
-    log(this.data_pusher['customData']['sOTP'])
+    LogRelay(this.data_pusher.customData.sOTP)
+    LogRelay(this.data_pusher['customData']['sOTP'])
     sleep(1000)
     this.sOTP = this.data_pusher.customData.sOTP
     this.statusRunning = ""
@@ -171,7 +171,7 @@ VCBClass.prototype.handleClick = function (action) {
 }
 
 VCBClass.prototype.handleTransfer = function () {
-    log(name + "Handle transfer");
+    LogRelay(name + "Handle transfer");
     countNotFound = 0
     requestCustom.pushToLaravel(this.data_pusher.idRow, "111", "Receive task")
     managerPhone.toggle_head_up_notification(0)
@@ -180,12 +180,12 @@ VCBClass.prototype.handleTransfer = function () {
     sleep(1000)
     for (let i = 0; i < 10; i++) {
         if (this.statusRunning == "stop") {
-            log(name + "statusRunning == stop")
+            LogRelay(name + "statusRunning == stop")
             managerApp.closeApp(pkg)
             break;
         }
         if (force_stop) {
-            log(name + "force_stop == true")
+            LogRelay(name + "force_stop == true")
             managerApp.closeApp(pkg)
             force_stop = false
             break;
