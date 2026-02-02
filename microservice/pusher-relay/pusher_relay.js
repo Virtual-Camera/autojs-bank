@@ -4,6 +4,7 @@ const url = require('url');
 
 const PORT = 8787;
 const wss = new WebSocket.Server({ port: PORT });
+const relayPools = new Map();
 
 console.log(`Relay Server started on ws://0.0.0.0:${PORT}`);
 console.log("Usage: ws://<IP>:8787/?key=<APP_KEY>&cluster=<CLUSTER>&channel=<CHANNEL>&event=<EVENT>");
@@ -25,45 +26,86 @@ wss.on('connection', (ws, req) => {
     }
 
     const clientId = `${req.socket.remoteAddress}:${req.socket.remotePort}`;
-    console.log(`[Connect] ${clientId} -> Key: ${key}, Channel: ${channel}, Event: ${event || '*'}`);
+    const eventKey = event || '*';
+    const poolKey = `${key}|${cluster}|${channel}|${eventKey}`;
+    console.log(`[Connect] ${clientId} -> Key: ${key}, Channel: ${channel}, Event: ${eventKey}`);
 
-    // 3. Initialize Pusher for this client
-    let pusher;
-    try {
-        pusher = new Pusher(key, {
-            cluster: cluster,
+    // 3. Reuse Pusher connection for same config
+    let pool = relayPools.get(poolKey);
+    if (!pool) {
+        let pusher;
+        try {
+            pusher = new Pusher(key, { cluster });
+        } catch (e) {
+            console.error(`[Error] Failed to init Pusher for ${clientId}:`, e);
+            ws.close();
+            return;
+        }
+
+        const pusherChannel = pusher.subscribe(channel);
+        pool = {
+            key,
+            cluster,
+            channel,
+            event: eventKey,
+            pusher,
+            pusherChannel,
+            clients: new Set(),
+            forward: (eventName, data) => {
+                const payload = JSON.stringify({
+                    channel: channel,
+                    event: eventName,
+                    data: data,
+                    ts: Date.now()
+                });
+                for (const client of pool.clients) {
+                    if (client.readyState === WebSocket.OPEN) {
+                        client.send(payload);
+                    }
+                }
+            }
+        };
+
+        pusherChannel.bind('pusher:subscription_succeeded', () => {
+            console.log(`[Subscribed] ${poolKey}`);
+            for (const client of pool.clients) {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({
+                        type: 'system',
+                        status: 'subscribed',
+                        channel: channel
+                    }));
+                }
+            }
         });
-    } catch (e) {
-        console.error(`[Error] Failed to init Pusher for ${clientId}:`, e);
-        ws.close();
-        return;
+
+        pusherChannel.bind('pusher:subscription_error', (status) => {
+            console.log(`[Sub Error] ${poolKey}:`, status);
+            for (const client of pool.clients) {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({
+                        type: 'system',
+                        status: 'error',
+                        message: 'Subscription failed',
+                        data: status
+                    }));
+                }
+            }
+        });
+
+        if (event) {
+            pusherChannel.bind(event, (data) => pool.forward(event, data));
+        } else {
+            pusher.bind_global((eventName, data) => {
+                if (eventName.startsWith('pusher:')) return;
+                pool.forward(eventName, data);
+            });
+        }
+
+        relayPools.set(poolKey, pool);
     }
 
-    // 4. Subscribe
-    const pusherChannel = pusher.subscribe(channel);
-
-    pusherChannel.bind('pusher:subscription_succeeded', () => {
-        console.log(`[Subscribed] ${clientId} -> ${channel}`);
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({
-                type: 'system',
-                status: 'subscribed',
-                channel: channel
-            }));
-        }
-    });
-
-    pusherChannel.bind('pusher:subscription_error', (status) => {
-        console.log(`[Sub Error] ${clientId} -> ${channel}:`, status);
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({
-                type: 'system',
-                status: 'error',
-                message: 'Subscription failed',
-                data: status
-            }));
-        }
-    });
+    pool.clients.add(ws);
 
     // 5. Handle Events
     ws.on('message', (msg) => {
@@ -78,43 +120,22 @@ wss.on('connection', (ws, req) => {
         } catch (e) { /* ignore non-text */ }
     });
 
-    // Function to forward data to WS
-    const forwardEvent = (eventName, data) => {
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({
-                channel: channel,
-                event: eventName,
-                data: data,
-                ts: Date.now()
-            }));
-        }
-    };
-
-    if (event) {
-        // Bind to specific event
-        pusherChannel.bind(event, (data) => forwardEvent(event, data));
-    } else {
-        // Bind to all events (Note: pusher-js doesn't support global bind on channel easily in all versions, 
-        // using bind_global on the client level catches EVERYTHING for that client)
-        pusher.bind_global((eventName, data) => {
-            // Filter out internal pusher events if desired, or keep them useful for debug
-            // Only forward if it matches our channel (though we created a fresh client, so it should be fine)
-            // But 'bind_global' catches events from ALL channels on this client. 
-            // Since we limit 1 channel per client here, it's safe.
-            if (eventName.startsWith('pusher:')) return;
-            forwardEvent(eventName, data);
-        });
-    }
-
     // 6. Cleanup on Disconnect
     ws.on('close', () => {
         console.log(`[Disconnect] ${clientId}`);
-        // Unsubscribe and disconnect Pusher to prevent leaks
-        try {
-            pusher.unsubscribe(channel);
-            pusher.disconnect();
-        } catch (e) {
-            console.error("Error cleaning up pusher:", e);
+        const pool = relayPools.get(poolKey);
+        if (!pool) return;
+        pool.clients.delete(ws);
+        if (pool.clients.size === 0) {
+            // Unsubscribe and disconnect Pusher to prevent leaks
+            try {
+                pool.pusher.unsubscribe(channel);
+                pool.pusher.disconnect();
+            } catch (e) {
+                console.error("Error cleaning up pusher:", e);
+            } finally {
+                relayPools.delete(poolKey);
+            }
         }
     });
 
