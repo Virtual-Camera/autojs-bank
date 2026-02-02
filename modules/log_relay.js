@@ -40,7 +40,11 @@ if (!globalThis[KEY]) {
       sendNext();
     });
     ws.on("message", (event) => {
-      log("Message received: " + event.toString());
+      let data = JSON.parse(event.toString());
+      let message = data.message;
+      if (!message.includes("Log received")) {
+        log("Message received: " + event.toString());
+      }
     });
     ws.on("error", (e) => {
       connecting = false;
@@ -117,7 +121,7 @@ if (!globalThis[KEY]) {
       message: text,
       service,
       meta,
-      logId: "bc718a8b-7278-4df4-b67b-c5c28013a19a",
+      logIdCustom: "autojs",
     };
 
     queue.push(JSON.stringify(msg));
