@@ -16,7 +16,7 @@ console.log(`Watching for file changes to run ${DEPLOY_SCRIPT}...`);
 // Hàm chạy deploy.bat
 function runDeploy() {
     if (isDeploying) return;
-    if (Date.now() - last_deploy < 10000) {
+    if (Date.now() - last_deploy < 5000) {
         console.log(`\n[${new Date().toLocaleTimeString()}] Deploy is running...`);
         return;
     }
