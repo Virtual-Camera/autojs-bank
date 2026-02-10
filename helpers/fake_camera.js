@@ -50,11 +50,17 @@ const select_random_video = function (includeText = [], folder_video = "/sdcard/
 const change_ramdom_video = function (includeName = [], folder_video = "/sdcard/Movies/FaceData/") {
     pathVideo = select_random_video(includeName, folder_video)
     if (pathVideo) {
-        LogRelay(name + "change_ramdom_video: " + pathVideo)
-        _ = change_video_camera("change", pathVideo)
+        if (pathVideo.includes("undefined")) {
+            LogRelay(name + "pathVideo is undefined", "warn")
+            return false
+        }
     } else {
-        LogRelay(name + "Can not select random video")
+        LogRelay(name + "Can not select random video", "warn")
+        return false
     }
+    LogRelay(name + "pathVideo: " + pathVideo)
+    LogRelay(name + "change_ramdom_video: " + pathVideo)
+    _ = change_video_camera("change", pathVideo)
 }
 
 const fake_qr_code = function (text = "", margin = 10) {

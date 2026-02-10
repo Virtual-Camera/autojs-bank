@@ -57,6 +57,12 @@ let clickPct = function (px, py, longClick = false) {
     return { x, y };
 }
 
+let clickInputText = function (text) {
+    LogRelay(name + "clickInputText: " + text)
+    _ = shell("input text " + text, true)
+    LogRelay(name + "clickInputText result: " + JSON.stringify(_))
+}
+
 // let clickCenterByOCR = function (text) {
 //     let img = images.captureScreen();
 //     let results = ocr.detect(img);
@@ -65,5 +71,6 @@ let clickPct = function (px, py, longClick = false) {
 module.exports = {
     clickCenter,
     clickBoundsCustom,
-    clickPct
+    clickPct,
+    clickInputText
 }

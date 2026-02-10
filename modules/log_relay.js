@@ -1,9 +1,9 @@
 const KEY = "__LogRelaySingleton__";
+let { get_serial_number } = require("../helpers/manager_phone.js")
 
 if (!globalThis[KEY]) {
-  let name = "[LogRelay]: ";
-  log(name + "module loaded");
-
+    let name = "[LogRelay]: ";
+    log(name + "module loaded");
   // WebSocket phải là ws:// hoặc wss://
   let wsUrl = "wss://log.1s.money/api/logs";
   let ws = null;
@@ -16,6 +16,17 @@ if (!globalThis[KEY]) {
   let retryTimer = null;
   let retryDelay = 500;
   let retryDelayMax = 5000;
+
+  let _serial = null;
+function getSerialLazy() {
+  if (_serial != null) return _serial;
+  try {
+    _serial = get_serial_number();   // gọi khi LogRelay chạy, không phải lúc load module
+  } catch (e) {
+    _serial = "unknown";
+  }
+  return _serial;
+}
 
   function connect() {
     if (ws && (ws.readyState === 0 || ws.readyState === 1)) return;
@@ -114,7 +125,7 @@ if (!globalThis[KEY]) {
 
   function LogRelay(text, level = "info", service = "autojs", meta = {}) {
     console.log(name + text);
-
+    meta.deviceID = mySN;
     let msg = {
       type: "log",
       level,

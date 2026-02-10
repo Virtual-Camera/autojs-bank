@@ -20,7 +20,7 @@ const change_nav_bar = function (type = 0) {
 
 const toggle_head_up_notification = function (value = 0) {
     try {
-        LogRelay(name + "toggle_head_up_notification: " + value)
+        // LogRelay(name + "toggle_head_up_notification: " + value)
         customShell("settings put global heads_up_notifications_enabled " + value)
     } catch (e) {
         LogRelay(name + "toggle_head_up_notification error: " + e)
@@ -30,7 +30,7 @@ const toggle_head_up_notification = function (value = 0) {
 
 const get_serial_number = function () {
     try {
-        LogRelay(name + "get_serial_number")
+        // LogRelay(name + "get_serial_number")
         let res = customShell("getprop ro.serialno", true)
         if (res.code == 0) {
             let sn = res.result.trim()
@@ -41,7 +41,7 @@ const get_serial_number = function () {
         }
         return false
     } catch (e) {
-        LogRelay(name + "get_serial_number error: " + e)
+        // LogRelay(name + "get_serial_number error: " + e)
         return false
     }
 }
