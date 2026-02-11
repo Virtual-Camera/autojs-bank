@@ -34,6 +34,8 @@ let config_detect = {
                 "Close"
             ], [
                 "Check", "again"
+            ], [
+                "Enter"
             ]
         ]
     },
