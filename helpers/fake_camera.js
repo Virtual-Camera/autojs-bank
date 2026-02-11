@@ -22,7 +22,7 @@ const change_video_camera = function (action, data) {
 const select_random_video = function (includeText = [], folder_video = "/sdcard/Movies/FaceData/") {
     try {
         let listVideo = files.listDir(folder_video)
-        LogRelay(name + "select_random_video from folder: " + folder_video + ", list: " + String(listVideo))
+        LogRelay(name + "select_random_video from folder: " + folder_video + ", list: " + String(listVideo) + ", includeText: " + String(includeText))
         let filtedVideo = []
         listVideo.forEach(video => {
             includeStatus = true
