@@ -23,6 +23,15 @@ let config_detect = {
             "Log", "in", "Scan", "QR"
         ]
     },
+    "input_otp": {
+        "text": [
+            "OTP"
+        ],
+        "not_text": [
+            ["Confirm"],
+            ["refresh"]
+        ]
+    },
     "tab_scan": {
         "text": [
             "Scan", "QR"
@@ -35,7 +44,7 @@ let config_detect = {
             ], [
                 "Check", "again"
             ], [
-                "Enter"
+                "Enter", "please"
             ]
         ]
     },
@@ -69,15 +78,6 @@ let config_detect = {
     "error_interrupted": {
         "text": [
             "interrupted", "try", "again"
-        ]
-    },
-    "input_otp": {
-        "text": [
-            "OTP"
-        ],
-        "not_text": [
-            ["Confirm"],
-            ["refresh"]
         ]
     },
     "confirm_smart_otp": {
