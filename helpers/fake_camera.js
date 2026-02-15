@@ -1,4 +1,6 @@
 let { customShell } = require("../helpers/custom_shell.js")
+let { sleepCustom, showText } = require("../helpers/utils.js");
+let { LogRelay } = require("../modules/log_relay.js");
 let _
 let name = "[FakeCamera]: "
 const change_video_camera = function (action, data) {
@@ -52,6 +54,7 @@ const change_ramdom_video = function (includeName = [], folder_video = "/sdcard/
     if (pathVideo) {
         if (pathVideo.includes("undefined")) {
             LogRelay(name + "pathVideo is undefined", "warn")
+            showText("Can not select random video", 150, 1180, 50, "#0000FF", 1000)
             return false
         }
     } else {

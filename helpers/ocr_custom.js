@@ -133,7 +133,27 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10, print_log =
     }
 }
 
+let continueDetect = function (check_continue) {
+    try {
+        if (check_continue.old_key == check_continue.new_key) {
+            check_continue.count++
+        } else {
+            check_continue.count = 0
+        }
+        if (check_continue.count >= check_continue.max_count) {
+            return false
+        }
+        check_continue.old_key = check_continue.new_key
+        return true
+    } catch (e) {
+        LogRelay(name + "continueDetect: " + e)
+        return false
+    }
+}
+
+
 module.exports = {
     waitTextOCR,
-    detectScreenOCR
+    detectScreenOCR,
+    continueDetect
 }

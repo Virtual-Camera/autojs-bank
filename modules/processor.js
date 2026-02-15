@@ -7,6 +7,7 @@ let {LogRelay} = require("../modules/log_relay.js");
 var VTBClass = require("../handle/vtb.js");
 var VCBClass = require("../handle/vcb.js");
 var BIDVClass = require("../handle/bidv.js");
+var ACBClass = require("../handle/acb.js");
 module.exports = {
     handle: function (payload) {
         try {
@@ -28,6 +29,10 @@ module.exports = {
                 case "bidv-personal":
                     let bidv = new BIDVClass(data)
                     bidv.handleTransfer();
+                    break;
+                case "acb-personal":
+                    let acb = new ACBClass(data)
+                    acb.handleTransfer();
                     break;
                 default:
                     LogRelay("Unknown bank: " + fullBank);
