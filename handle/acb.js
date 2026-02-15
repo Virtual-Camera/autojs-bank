@@ -189,6 +189,7 @@ ACBClass.prototype.handleClick = function (detect) {
             case "balance_not_enough":
                 LogRelay(name + "Action balance not enough")
                 showText("Balance not enough", 150, 1180, 60, "#0000FF", 2000)
+                requestCustom.transferLogSet(this.id_row, "810")
                 this.statusRunning = "stop"
                 break;
 
