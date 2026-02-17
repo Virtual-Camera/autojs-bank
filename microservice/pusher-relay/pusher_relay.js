@@ -52,6 +52,7 @@ wss.on('connection', (ws, req) => {
             pusherChannel,
             clients: new Set(),
             forward: (eventName, data) => {
+                console.log(`[Pusher Event] ${poolKey} -> ${eventName}`);
                 const payload = JSON.stringify({
                     channel: channel,
                     event: eventName,
