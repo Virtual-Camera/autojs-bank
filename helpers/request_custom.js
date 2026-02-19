@@ -47,10 +47,13 @@ const transferLogCheck = function (id_row, now_status = false, timeout = 30000, 
     return data
 }
 
-const transferLogSet = function (id_row, status) {
+const transferLogSet = function (id_row, status, checkError = false) {
     try {
         let api = Config.getConfig("API");
         let url = api + "api/adb-tool/transfer-log/update?idRow=" + id_row + "&column=status&value=" + status;
+        if (checkError) {
+            url += "&checkError=true";
+        }
         let res = http.get(url);
         let html = res.body.string();
         res = JSON.parse(html);

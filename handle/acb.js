@@ -101,7 +101,7 @@ ACBClass.prototype.handleTransfer = function () {
         LogRelay(name + "handleTransfer")
         this.qrCode = this.data_pusher['customData']['transLog']['saveData3']
         console.hide();
-        requestCustom.transferLogSet(this.id_row, "111")
+        requestCustom.transferLogSet(this.id_row, "111", true)
         let _ = managerApp.openApp(pkg, "", true, true)
         LogRelay(name + "openApp: " + _)
         fake_qr_code(this.qrCode, 200)
@@ -169,12 +169,21 @@ ACBClass.prototype.handleClick = function (detect) {
                 break;
             case "input_safe_key":
                 LogRelay(name + "Action input safe key")
+                _ = requestCustom.transferLogGet(this.id_row)
+                LogRelay(name + "transferLogGet: " + JSON.stringify(_))
+                if (_['status'] != "111") {
+                    LogRelay(name + "status != 111")
+                    toast("Status not 111")
+                    this.statusRunning = "stop"
+                    return false
+                }
                 let safe_key = this.data_pusher.customData.sOTP
                 clickCustom.clickInputText(safe_key)
                 break;
             case "confirm_otp":
                 LogRelay(name + "Action confirm otp")
                 clickCustom.clickPct(50, 90, true)
+                sleepCustom(5000)
                 break;
             case "success_transfer":
                 LogRelay(name + "Action success transfer")
