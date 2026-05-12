@@ -20,6 +20,11 @@ let config_detect = {
             "Log", "in", "Get", "OTP", "QR"
         ]
     },
+    "error_1": {
+        "text": [
+            "Error", "transaction", "limit"
+        ]
+    },
     "notice_login": {
         "text": [
             "Login", "Log", "in", "Later"
@@ -198,6 +203,12 @@ ACBClass.prototype.handleClick = function (detect) {
             case "balance_not_enough":
                 LogRelay(name + "Action balance not enough")
                 showText("Balance not enough", 150, 1180, 60, "#0000FF", 2000)
+                requestCustom.transferLogSet(this.id_row, "810")
+                this.statusRunning = "stop"
+                break;
+            case "error_1":
+                LogRelay(name + "Action error 1")
+                showText("Error 1", 150, 1180, 60, "#0000FF", 2000)
                 requestCustom.transferLogSet(this.id_row, "810")
                 this.statusRunning = "stop"
                 break;
