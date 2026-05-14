@@ -3,7 +3,7 @@
  * Manage configuration and device information
  */
 // const ENV = require("../env.js");
-let {LogRelaySE} = require("../modules/log_relay.js");
+let { sendLog } = require("../modules/log_axiom.js");
 let { get_serial_number } = require("../helpers/manager_phone.js")
 var storageName = "ENV";
 var st = storages.create(storageName);
@@ -37,16 +37,16 @@ module.exports = {
             return sn
         }
         var savedSN = st.get("DEVICE_SN");
-        LogRelaySE("Device SN from storage: " + savedSN);
+        sendLog("Device SN from storage: " + savedSN);
         if (savedSN) return savedSN;
 
         // Thử lấy Android ID (thường ổn định hơn Serial trên Android mới)
         try {
             var androidId = device.getAndroidId();
-            LogRelaySE("Android ID: " + androidId);
+            sendLog("Android ID: " + androidId);
             return androidId;
         } catch (e) {
-            LogRelaySE("Error getting Android ID: " + e);
+            sendLog("Error getting Android ID: " + e);
             return device.serial; // Fallback
         }
     },
