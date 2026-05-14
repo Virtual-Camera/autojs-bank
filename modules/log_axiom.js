@@ -16,23 +16,21 @@ const createBody = (log, level = "info") => {
     };
 }
 
-const sendLog = (log, level = "info") => {
-    console.log(`[${level.toUpperCase()}]: ${log}`);
-    let body = createBody(log, level);
-    threads.start(() => {
-        let response = http.request(url, {
-            "body": JSON.stringify(body),
-            "headers": {
-                "Authorization": "Bearer xaat-b1fec962-3f77-4f7d-8501-cea38619b4f3",
-                "Content-Type": "application/json"
-            },
-            "method": "POST"
-        });
-        // console.log(JSON.stringify(response));
-    });
-}
 
 module.exports = {
-    sendLogs: sendLog,
-    sendLog
+    sendLog: (log, level = "info") => {
+        console.log(`[${level.toUpperCase()}]: ${log}`);
+        let body = createBody(log, level);
+        threads.start(() => {
+            let response = http.request(url, {
+                "body": JSON.stringify(body),
+                "headers": {
+                    "Authorization": "Bearer xaat-b1fec962-3f77-4f7d-8501-cea38619b4f3",
+                    "Content-Type": "application/json"
+                },
+                "method": "POST"
+            });
+            // console.log(JSON.stringify(response));
+        });
+    }
 }
