@@ -1,12 +1,13 @@
-let { LogRelay } = require("../modules/log_relay.js");
-let name = "[Sleep]: "
+
+let { sendLog } = require("../modules/log_axiom.js");
+let name = "[SleepCustom]: "
 
 module.exports = {
     sleepCustom: function (ms) {
-        LogRelay(name + "Sleep: " + ms)
+        sendLog(name + "Sleep: " + ms)
         let start = Date.now();
         while (Date.now() - start < ms) {
-            LogRelay(name + "Sleep: " + (Date.now() - start))
+            sendLog(name + "Sleep: " + (Date.now() - start))
             sleep(500);
         }
     }
