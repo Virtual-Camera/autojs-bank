@@ -2,19 +2,19 @@
  * Main Script
  * Entry point for app
  */
-let { LogRelay } = require("./modules/log_relay.js");
+let { sendLog } = require("./modules/log_axiom.js");
 let ENV = require("./env.js");
-LogRelay("====================================================");
+sendLog("====================================================");
 var Config = require("./modules/config.js");
 var WSClient = require("./modules/websocket.js");
 
 // 0. Check other script running
 let id_now = engines.myEngine().id;
 let id_all = engines.all();
-LogRelay("Id Now = " + id_now + ", Id All = " + id_all.length);
+sendLog("Id Now = " + id_now + ", Id All = " + id_all.length);
 id_all.forEach((e) => {
   if (e.id !== id_now) {
-    LogRelay("Kill other script: " + e.id);
+    sendLog("Kill other script: " + e.id);
     e.forceStop();
   }
 });
@@ -28,13 +28,13 @@ device.keepScreenOn(3600 * 10000);
 var config = Config.getPusherConfig();
 var mySN = Config.getDeviceSN();
 
-LogRelay("=== AUTO BANKING CLIENT start ===");
-LogRelay("API: " + ENV.API);
-LogRelay("Key: " + config.key);
-LogRelay("Cluster: " + config.cluster);
-LogRelay("Channel: " + config.channel);
-LogRelay("Device SN: " + mySN);
-LogRelay("=== AUTO BANKING CLIENT end ===");
+sendLog("=== AUTO BANKING CLIENT start ===");
+sendLog("API: " + ENV.API);
+sendLog("Key: " + config.key);
+sendLog("Cluster: " + config.cluster);
+sendLog("Channel: " + config.channel);
+sendLog("Device SN: " + mySN);
+sendLog("=== AUTO BANKING CLIENT end ===");
 
 // 3. Start WebSocket Client
 WSClient.start(config, mySN);
