@@ -1,5 +1,7 @@
 let clickCustom = require("../helpers/click_custom.js")
 let customShell = require("../helpers/custom_shell.js")
+let { sendLog } = require("../modules/log_axiom.js");
+let LogRelay = sendLog;
 
 let name = "[OCR-Custom]: "
 function norm(s) {
