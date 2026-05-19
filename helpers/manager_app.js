@@ -1,6 +1,7 @@
 let { customShell } = require("../helpers/custom_shell.js")
 let { change_video_camera } = require("../helpers/fake_camera.js")
-
+let { sendLog } = require("../modules/log_axiom.js");
+let LogRelay = sendLog;
 let name = "[ManagerApp]: "
 let closeApp = function (pkg) {
     try {
