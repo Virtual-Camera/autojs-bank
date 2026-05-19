@@ -1,4 +1,4 @@
-
+let { sendLog } = require("../modules/log_axiom.js");
 let name = "[RequestCustom]: "
 
 
@@ -12,7 +12,7 @@ const pushToLaravel = function (id_row, status, message) {
     };
     let res = http.post(url, data);
     let html = res.body.string();
-    LogRelay(html);
+    sendLog(name + "pushToLaravel: " + html);
     return html;
 }
 
@@ -36,7 +36,7 @@ const transferLogCheck = function (id_row, now_status = false, timeout = 30000, 
             break;
         }
         data = transferLogGet(id_row)
-        LogRelay(name + "transferLogCheck: " + data.status)
+        sendLog(name + "transferLogCheck: " + JSON.stringify(data))
         if (now_status) {
             if (data.status != now_status) {
                 return data
@@ -57,14 +57,14 @@ const transferLogSet = function (id_row, status, checkError = false) {
         let res = http.get(url);
         let html = res.body.string();
         res = JSON.parse(html);
-        LogRelay(name + "transferLogSet: " + html)
+        sendLog(name + "transferLogSet: " + JSON.stringify(res))
         if (res.status) {
             return res.data
         }
         return false
     } catch (error) {
-        LogRelay(name + "Error transferLogSet: " + error)
-        LogRelay(error.stack)
+        sendLog(name + "Error transferLogSet: " + JSON.stringify(error))
+        sendLog(name + "Error transferLogSet stack: " + JSON.stringify(error.stack))
     }
 
 }
