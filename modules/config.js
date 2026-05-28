@@ -3,11 +3,13 @@
  * Manage configuration and device information
  */
 // const ENV = require("../env.js");
-let { sendLog } = require("../modules/log_axiom.js");
+// let { sendLog } = require("../modules/log_axiom.js");
+const { sendLog: logAxiom } = globalThis.__LogAxiomSingleton__ || {};
 let { get_serial_number } = require("../helpers/manager_phone.js")
 var storageName = "ENV";
 var st = storages.create(storageName);
 
+logAxiom(JSON.stringify("ENV: " + JSON.stringify(ENV)))
 // Default config
 st.put("PUSHER_KEY", ENV.PUSHER_KEY);
 st.put("PUSHER_CLUSTER", ENV.PUSHER_CLUSTER);
@@ -37,18 +39,18 @@ module.exports = {
             return sn
         }
         var savedSN = st.get("DEVICE_SN");
-        sendLog("Device SN from storage: " + savedSN);
+        logAxiom("Device SN from storage: " + savedSN);
         if (savedSN) return savedSN;
 
         // Thử lấy Android ID (thường ổn định hơn Serial trên Android mới)
-        try {
-            var androidId = device.getAndroidId();
-            sendLog("Android ID: " + androidId);
-            return androidId;
-        } catch (e) {
-            sendLog("Error getting Android ID: " + e);
-            return device.serial; // Fallback
-        }
+        // try {
+        //     var androidId = device.getAndroidId();
+        //     logAxiom("Android ID: " + androidId);
+        //     return androidId;
+        // } catch (e) {
+        //     logAxiom("Error getting Android ID: " + e);
+        //     return device.serial; // Fallback
+        // }
     },
 
     // Hàm tiện ích để cập nhật cấu hình nếu cần
