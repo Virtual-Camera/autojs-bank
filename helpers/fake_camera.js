@@ -1,6 +1,7 @@
 let { customShell } = require("../helpers/custom_shell.js")
 let { sleepCustom, showText } = require("../helpers/utils.js");
-let { LogRelay } = require("../modules/log_relay.js");
+let { sendLog } = require("../modules/log_axiom.js");
+let LogRelay = sendLog;
 let _
 let name = "[FakeCamera]: "
 const change_video_camera = function (action, data) {
