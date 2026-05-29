@@ -4,7 +4,7 @@ let requestCustom = require("../helpers/request_custom.js");
 let ocrCustom = require("../helpers/ocr_custom.js");
 let { sleepCustom, showText } = require("../helpers/utils.js");
 let clickCustom = require("../helpers/click_custom.js");
-let { fake_qr_code, change_ramdom_video } = require("../helpers/fake_camera.js")
+let { fake_qr_code, change_ramdom_video, change_video_camera } = require("../helpers/fake_camera.js")
 
 let name = "[ACB]: "
 let pkg = "mobile.acb.com.vn"
@@ -154,6 +154,7 @@ ACBClass.prototype.handleClick = function (detect) {
             case "notice_login":
                 sendLog(name + "Action notice login")
                 clickCustom.clickPct(70, 60, true)
+                change_video_camera("clear", "")
                 change_ramdom_video([this.data_pusher.username, "ACB"])
 
                 break;
