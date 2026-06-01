@@ -148,20 +148,6 @@ const handleTransferSuccess = function () {
     managerApp.closeApp(pkg)
 }
 
-const handleIncorrectOTP = function (idRow) {
-    requestCustom.pushToLaravel(idRow, "802", "Incorrect OTP")
-    this.statusRunning = "stop"
-}
-
-const handleOTPLocked = function (idRow) {
-    requestCustom.pushToLaravel(idRow, "807", "OTP locked")
-    this.statusRunning = "stop"
-}
-
-const handleActiveOTP = function (idRow) {
-    requestCustom.pushToLaravel(idRow, "806", "Active OTP")
-    this.statusRunning = "stop"
-}
 
 VCBClass = function (data_pusher) {
     this.data_pusher = data_pusher
@@ -204,13 +190,13 @@ VCBClass.prototype.handleClick = function (action) {
             handleTransferSuccess()
             break;
         case "incorrect_otp":
-            handleIncorrectOTP(this.idRow)
+            this.handleIncorrectOTP(this.idRow)
             break;
         case "otp_locked":
-            handleOTPLocked(this.idRow)
+            this.handleOTPLocked(this.idRow)
             break;
         case "active_otp":
-            handleActiveOTP(this.idRow)
+            this.handleActiveOTP(this.idRow)
             break;
         default:
             break;
@@ -250,7 +236,19 @@ VCBClass.prototype.handleTransfer = function () {
     }
 
 }
+VCBClass.prototype.handleActiveOTP = function (idRow) {
+    requestCustom.pushToLaravel(idRow, "806", "Active OTP")
+    this.statusRunning = "stop"
+}
 
+VCBClass.prototype.handleIncorrectOTP = function (idRow) {
+    requestCustom.pushToLaravel(idRow, "802", "Incorrect OTP")
+    this.statusRunning = "stop"
+}
 
+VCBClass.prototype.handleOTPLocked = function (idRow) {
+    requestCustom.pushToLaravel(idRow, "807", "OTP locked")
+    this.statusRunning = "stop"
+}
 
 module.exports = VCBClass
