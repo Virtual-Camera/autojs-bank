@@ -75,6 +75,11 @@ var config_detect = {
         "text": [
             "ENG", "Tạo OTP"
         ]
+    },
+    "incorrect_otp": {
+        "text": [
+            "incorrect", "OTP"
+        ]
     }
 }
 
@@ -130,6 +135,11 @@ const handleTransferSuccess = function () {
     managerApp.closeApp(pkg)
 }
 
+const handleIncorrectOTP = function () {
+    requestCustom.pushToLaravel(this.data_pusher.idRow, "802", "Incorrect OTP")
+    this.statusRunning = "stop"
+}
+
 
 VCBClass = function (data_pusher) {
     this.data_pusher = data_pusher
@@ -169,6 +179,9 @@ VCBClass.prototype.handleClick = function (action) {
             break;
         case "transfer_success":
             handleTransferSuccess()
+            break;
+        case "incorrect_otp":
+            handleIncorrectOTP()
             break;
         default:
             break;
