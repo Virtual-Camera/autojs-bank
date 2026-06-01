@@ -19,6 +19,11 @@ let rs_id_kyc = "com.VCB:id/frOverlay"
 let rs_id_loadding = "com.VCB:id/progressLoading"
 let force_stop = false
 var config_detect = {
+    "otp_locked": {
+        "text": [
+            "locked", "OTP", "5"
+        ]
+    },
     "homepage": {
         "text": [
             "Forgot", "QR", "Password"
@@ -143,6 +148,10 @@ const handleIncorrectOTP = function () {
     this.statusRunning = "stop"
 }
 
+const handleOTPLocked = function () {
+    requestCustom.pushToLaravel(this.data_pusher.idRow, "807", "OTP locked")
+    this.statusRunning = "stop"
+}
 
 VCBClass = function (data_pusher) {
     this.data_pusher = data_pusher
@@ -185,6 +194,9 @@ VCBClass.prototype.handleClick = function (action) {
             break;
         case "incorrect_otp":
             handleIncorrectOTP()
+            break;
+        case "otp_locked":
+            handleOTPLocked()
             break;
         default:
             break;
