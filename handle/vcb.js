@@ -6,8 +6,8 @@ let requestCustom = require("../helpers/request_custom.js")
 let { customShell } = require("../helpers/custom_shell.js")
 let { change_ramdom_video, change_video_camera } = require("../helpers/fake_camera.js")
 let elementSe = require("../helpers/element_se.js")
-let axiom = globalThis.__LogAxiomSingleton__;
-let LogRelay = axiom.sendLog;
+let vcb_log_axiom = globalThis.__LogAxiomSingleton__;
+let LogRelay = vcb_log_axiom.sendLog;
 
 let _;
 let name = "[VCB]: "
