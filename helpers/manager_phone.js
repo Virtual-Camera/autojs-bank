@@ -1,10 +1,21 @@
+let manager_phone_log = globalThis.__LogAxiomSingleton__;
+let sendLog = manager_phone_log.sendLog;
+
 let { customShell } = require("../helpers/custom_shell.js")
 
 let name = "[Manager-Phone]: "
 
+function log_axiom(message) {
+    if (sendLog) {
+        sendLog(message)
+    } else {
+        log(message)
+    }
+}
+
 const change_nav_bar = function (type = 0) {
     try {
-        LogRelay(name + "change_nav_bar: " + type)
+        log_axiom(name + "change_nav_bar: " + type)
         if (type == 0) {
             customShell("cmd overlay enable  --user 0 com.android.internal.systemui.navbar.threebutton", true)
             customShell("cmd overlay disable  --user 0 com.android.internal.systemui.navbar.gestural", true)
@@ -13,24 +24,23 @@ const change_nav_bar = function (type = 0) {
             customShell("cmd overlay enable  --user 0 com.android.internal.systemui.navbar.gestural", true)
         }
     } catch (e) {
-        LogRelay(name + "change_nav_bar error: " + e)
+        log_axiom(name + "change_nav_bar error: " + e)
         return false
     }
 }
 
 const toggle_head_up_notification = function (value = 0) {
     try {
-        // LogRelay(name + "toggle_head_up_notification: " + value)
         customShell("settings put global heads_up_notifications_enabled " + value)
     } catch (e) {
-        LogRelay(name + "toggle_head_up_notification error: " + e)
+        log_axiom(name + "toggle_head_up_notification error: " + e)
         return false
     }
 }
 
 const get_serial_number = function () {
     try {
-        // LogRelay(name + "get_serial_number")
+        log_axiom(name + "get_serial_number")
         let res = customShell("getprop ro.serialno", true)
         if (res.code == 0) {
             let sn = res.result.trim()
@@ -41,7 +51,7 @@ const get_serial_number = function () {
         }
         return false
     } catch (e) {
-        // LogRelay(name + "get_serial_number error: " + e)
+        log_axiom(name + "get_serial_number error: " + JSON.stringify(e))
         return false
     }
 }
