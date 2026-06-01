@@ -6,7 +6,7 @@ let requestCustom = require("../helpers/request_custom.js")
 let { customShell } = require("../helpers/custom_shell.js")
 let { change_ramdom_video, change_video_camera } = require("../helpers/fake_camera.js")
 let elementSe = require("../helpers/element_se.js")
-const axiom = globalThis.__LogAxiomSingleton__;
+let axiom = globalThis.__LogAxiomSingleton__;
 let LogRelay = axiom.sendLog;
 
 let _;
