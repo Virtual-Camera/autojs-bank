@@ -2,7 +2,8 @@
  * Processor Module
  * Xử lý dữ liệu nghiệp vụ sau khi đã khớp SN
  */
-let {LogRelay} = require("../modules/log_relay.js");
+let processor_log = globalThis.__LogAxiomSingleton__;
+let sendLog = processor_log?.sendLog || null;
 
 var VTBClass = require("../handle/vtb.js");
 var VCBClass = require("../handle/vcb.js");
@@ -11,11 +12,11 @@ var ACBClass = require("../handle/acb.js");
 module.exports = {
     handle: function (payload) {
         try {
-            LogRelay("Start handle message from pusher")
+            sendLog("Start handle message from pusher")
             var data = payload.data;
             if (!data) return;
 
-            LogRelay("Data: " + JSON.stringify(data));
+            sendLog("Data: " + JSON.stringify(data));
             let fullBank = data.fullBank
             switch (fullBank) {
                 case "vtb-personal-sync":
@@ -35,7 +36,7 @@ module.exports = {
                     acb.handleTransfer();
                     break;
                 default:
-                    LogRelay("Unknown bank: " + fullBank);
+                    sendLog("Unknown bank: " + fullBank);
                     break;
             }
             // TODO: Viết logic auto banking ở đây
@@ -44,10 +45,10 @@ module.exports = {
 
             // Giả lập xử lý xong
             sleep(2000);
-            LogRelay("End handle message from pusher")
+            sendLog("End handle message from pusher")
         } catch (error) {
-            LogRelay("Error handle message from pusher: " + error)
-            LogRelay(error.stack)
+            sendLog("Error handle message from pusher: " + error)
+            sendLog(error.stack)
         }
     }
 };

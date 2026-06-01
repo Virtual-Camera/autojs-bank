@@ -1,22 +1,25 @@
 let { customShell } = require("../helpers/custom_shell.js")
 let { change_video_camera } = require("../helpers/fake_camera.js")
-let { sendLog } = require("../modules/log_axiom.js");
-let LogRelay = sendLog;
+
+let manager_app_log = globalThis.__LogAxiomSingleton__;
+let sendLog = manager_app_log?.sendLog || null;
+
+
 let name = "[ManagerApp]: "
 let closeApp = function (pkg) {
     try {
-        LogRelay(name + "closeApp: " + pkg)
+        sendLog(name + "closeApp: " + pkg)
         customShell("am force-stop " + pkg, true)
     } catch (e) {
-        LogRelay(name + "closeApp error: " + e)
+        sendLog(name + "closeApp error: " + e)
         return false
     }
 }
 let openApp = function (pkg, activity = "", close = true, useMonkey = false, pressHome = true) {
     try {
-        LogRelay(name + "openApp: clearing video camera")
+        sendLog(name + "openApp: clearing video camera")
         change_video_camera("clear")
-        LogRelay(name + "openApp: " + pkg + "/" + activity)
+        sendLog(name + "openApp: " + pkg + "/" + activity)
         if (close) {
             closeApp(pkg)
         }
@@ -29,7 +32,7 @@ let openApp = function (pkg, activity = "", close = true, useMonkey = false, pre
             customShell("am start -n " + pkg + "/" + activity)
         }
     } catch (e) {
-        LogRelay(name + "openApp error: " + e)
+        sendLog(name + "openApp error: " + e)
         return false
     }
 }
