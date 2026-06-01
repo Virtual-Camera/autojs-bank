@@ -19,7 +19,7 @@ let force_stop = false
 var config_detect = {
     "homepage": {
         "text": [
-            "Forgot", "Welcome", "Password"
+            "Forgot", "QR", "Password"
         ]
     },
     "noti_balance": {
