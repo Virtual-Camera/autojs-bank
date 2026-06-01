@@ -1,5 +1,5 @@
 let manager_phone_log = globalThis.__LogAxiomSingleton__;
-let sendLog = manager_phone_log.sendLog;
+let sendLog = manager_phone_log.sendLog || null;
 
 let { customShell } = require("../helpers/custom_shell.js")
 
