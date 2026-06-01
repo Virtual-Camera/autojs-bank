@@ -1,4 +1,6 @@
-let { sendLog } = require("../modules/log_axiom.js");
+let click_custom_log = globalThis.__LogAxiomSingleton__;
+let sendLog = click_custom_log?.sendLog || null;
+
 let _ = null
 let name = "[Click-Custom]:"
 let clickAuto = function (x, y, longClick = false) {
