@@ -19,6 +19,11 @@ let rs_id_kyc = "com.VCB:id/frOverlay"
 let rs_id_loadding = "com.VCB:id/progressLoading"
 let force_stop = false
 var config_detect = {
+    "active_otp": {
+        "text": [
+            "activate", "before", "using"
+        ]
+    },
     "otp_locked": {
         "text": [
             "locked", "OTP", "5"
@@ -153,6 +158,11 @@ const handleOTPLocked = function () {
     this.statusRunning = "stop"
 }
 
+const handleActiveOTP = function () {
+    requestCustom.pushToLaravel(this.data_pusher.idRow, "806", "Active OTP")
+    this.statusRunning = "stop"
+}
+
 VCBClass = function (data_pusher) {
     this.data_pusher = data_pusher
     LogRelay(this.data_pusher.customData.sOTP)
@@ -197,6 +207,9 @@ VCBClass.prototype.handleClick = function (action) {
             break;
         case "otp_locked":
             handleOTPLocked()
+            break;
+        case "active_otp":
+            handleActiveOTP()
             break;
         default:
             break;
