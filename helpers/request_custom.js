@@ -1,4 +1,6 @@
-let { sendLog } = require("../modules/log_axiom.js");
+let request_log_axiom = globalThis.__LogAxiomSingleton__;
+let sendLog = request_log_axiom.sendLog;
+
 let name = "[RequestCustom]: "
 
 
