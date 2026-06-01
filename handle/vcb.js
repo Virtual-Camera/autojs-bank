@@ -51,6 +51,9 @@ var config_detect = {
     "input_pin": {
         "text": [
             "PIN", "OTP"
+        ],
+        "not_text": [
+            ["incorrect"]
         ]
     },
     "confirm_transfer": {
