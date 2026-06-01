@@ -148,18 +148,18 @@ const handleTransferSuccess = function () {
     managerApp.closeApp(pkg)
 }
 
-const handleIncorrectOTP = function () {
-    requestCustom.pushToLaravel(this.data_pusher.idRow, "802", "Incorrect OTP")
+const handleIncorrectOTP = function (idRow) {
+    requestCustom.pushToLaravel(idRow, "802", "Incorrect OTP")
     this.statusRunning = "stop"
 }
 
-const handleOTPLocked = function () {
-    requestCustom.pushToLaravel(this.data_pusher.idRow, "807", "OTP locked")
+const handleOTPLocked = function (idRow) {
+    requestCustom.pushToLaravel(idRow, "807", "OTP locked")
     this.statusRunning = "stop"
 }
 
-const handleActiveOTP = function () {
-    requestCustom.pushToLaravel(this.data_pusher.idRow, "806", "Active OTP")
+const handleActiveOTP = function (idRow) {
+    requestCustom.pushToLaravel(idRow, "806", "Active OTP")
     this.statusRunning = "stop"
 }
 
@@ -170,6 +170,7 @@ VCBClass = function (data_pusher) {
     sleep(1000)
     this.sOTP = this.data_pusher.customData.sOTP
     this.statusRunning = ""
+    this.idRow = data_pusher['idRow']
 }
 VCBClass.prototype.handleClick = function (action) {
     switch (action) {
@@ -183,7 +184,7 @@ VCBClass.prototype.handleClick = function (action) {
             clickNotiNoti()
             break;
         case "transfer_expired":
-            requestCustom.pushToLaravel(this.data_pusher.idRow, "failed", "Transfer expired")
+            requestCustom.pushToLaravel(this.idRow, "failed", "Transfer expired")
             this.statusRunning = "stop"
             break;
         case "input_pin":
@@ -203,13 +204,13 @@ VCBClass.prototype.handleClick = function (action) {
             handleTransferSuccess()
             break;
         case "incorrect_otp":
-            handleIncorrectOTP()
+            handleIncorrectOTP(this.idRow)
             break;
         case "otp_locked":
-            handleOTPLocked()
+            handleOTPLocked(this.idRow)
             break;
         case "active_otp":
-            handleActiveOTP()
+            handleActiveOTP(this.idRow)
             break;
         default:
             break;
@@ -219,7 +220,7 @@ VCBClass.prototype.handleClick = function (action) {
 VCBClass.prototype.handleTransfer = function () {
     LogRelay(name + "Handle transfer");
     countNotFound = 0
-    requestCustom.pushToLaravel(this.data_pusher.idRow, "111", "Receive task")
+    requestCustom.pushToLaravel(this.idRow, "111", "Receive task")
     managerPhone.toggle_head_up_notification(0)
     managerPhone.change_nav_bar(1)
     managerApp.openApp(pkg, activity, true)
@@ -240,7 +241,7 @@ VCBClass.prototype.handleTransfer = function () {
         if (!tmp) {
             countNotFound++
             if (countNotFound > 3) {
-                requestCustom.pushToLaravel(this.data_pusher.idRow, "777", "Can not detect screen")
+                requestCustom.pushToLaravel(this.idRow, "777", "Can not detect screen")
                 this.statusRunning = "stop"
             }
         }
