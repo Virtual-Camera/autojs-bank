@@ -95,7 +95,7 @@ const handleInputPin = function (text) {
     _ = customShell("input text " + text)
     LogRelay(name + "handleInputPin: " + text + " result: " + _)
     sleepCustom(1000)
-    clickCustom.clickPct(50, 38, true)
+    clickCustom.clickPct(50, 40, true)
 }
 
 const handleConfirmTransfer = function () {
