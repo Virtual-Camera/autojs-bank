@@ -181,7 +181,6 @@ VCBClass.prototype.handleClick = function (action) {
             break;
         case "confirm_transfer":
             handleConfirmTransfer()
-            this.statusRunning = "stop"
             break;
         case "kyc":
             handleKYC(this.data_pusher.username)
