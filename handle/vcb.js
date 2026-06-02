@@ -146,10 +146,7 @@ const handleKYC = function (username) {
     }
 }
 
-const handleTransferSuccess = function () {
-    LogRelay(name + "handleTransferSuccess, closing app")
-    managerApp.closeApp(pkg)
-}
+
 
 
 VCBClass = function (data_pusher) {
@@ -189,7 +186,7 @@ VCBClass.prototype.handleClick = function (action) {
             handleVietnamese()
             break;
         case "transfer_success":
-            handleTransferSuccess()
+            this.handleTransferSuccess()
             break;
         case "incorrect_otp":
             this.handleIncorrectOTP(this.idRow)
@@ -250,6 +247,11 @@ VCBClass.prototype.handleIncorrectOTP = function (idRow) {
 
 VCBClass.prototype.handleOTPLocked = function (idRow) {
     requestCustom.pushToLaravel(idRow, "807", "OTP locked")
+    this.statusRunning = "stop"
+}
+
+VCBClass.prototype.handleTransferSuccess = function () {
+    LogRelay(name + "handleTransferSuccess, closing app")
     this.statusRunning = "stop"
 }
 
