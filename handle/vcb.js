@@ -86,7 +86,7 @@ var config_detect = {
     },
     "vietnamese": {
         "text": [
-            "ENG", "Tạo OTP"
+            "ENG", "Tao OTP"
         ]
     },
     "incorrect_otp": {
