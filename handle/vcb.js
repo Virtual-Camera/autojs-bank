@@ -24,11 +24,6 @@ var config_detect = {
             "activate", "before", "using"
         ]
     },
-    "otp_locked": {
-        "text": [
-            "locked", "OTP", "5"
-        ]
-    },
     "homepage": {
         "text": [
             "Forgot", "QR", "Password"
@@ -93,7 +88,15 @@ var config_detect = {
         "text": [
             "incorrect", "OTP"
         ]
-    }
+    },
+    "otp_locked": {
+        "text": [
+            "locked", "OTP", "5"
+        ],
+        "not_text": [
+            ["Continue"]
+        ]
+    },
 }
 
 const clickFromHomepage = function () {
