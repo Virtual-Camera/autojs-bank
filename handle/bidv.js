@@ -7,9 +7,12 @@ let { fake_qr_code } = require("../helpers/fake_camera.js")
 let { change_ramdom_video } = require("../helpers/fake_camera.js")
 let requestCustom = require("../helpers/request_custom.js")
 let elementSe = require("../helpers/element_se.js")
-let {LogRelay} = require("../modules/log_relay.js")
 let name = "[BIDV]: "
 let pkg = "com.vnpay.bidv"
+
+let bidv_log_axiom = globalThis.__LogAxiomSingleton__;
+let LogRelay = bidv_log_axiom.sendLog;
+
 let wait, _, res
 
 let config_detect = {
