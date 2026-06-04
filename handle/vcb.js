@@ -66,7 +66,8 @@ var config_detect = {
             "Confirm"
         ],
         "not_text": [
-            ["Success", "Close"]
+            ["Success", "Close"],
+            [ "incorrect" ]
         ]
     },
     "transfer_success": {
