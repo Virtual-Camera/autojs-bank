@@ -10,12 +10,20 @@ const KEY = "__LogAxiomSingleton__"
 if (!globalThis[KEY]) {
     const sn = get_serial_number()   // lấy serial number 1 lần duy nhất
 
-    const createBody = (message, level = "info") => ({
-        timestamp: Date.now(),
-        level: level,
-        sn: sn,                    // dùng biến sn đã khai báo
-        message: message
-    })
+    const createBody = (message, level = "info") => {
+        const body = {
+            timestamp: Date.now(),
+            level: level,
+            sn: sn,
+            message: message
+        }
+
+        if (globalThis.bankName) {
+            body.bankName = globalThis.bankName
+        }
+
+        return body
+    }
 
     function sendLog(message, level = "info") {
         console.log(`[${level.toUpperCase()}]: ${message}`)

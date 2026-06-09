@@ -7,11 +7,13 @@ let { fake_qr_code } = require("../helpers/fake_camera.js")
 let { change_ramdom_video } = require("../helpers/fake_camera.js")
 let requestCustom = require("../helpers/request_custom.js")
 let elementSe = require("../helpers/element_se.js")
+let { showWarning } = require("../helpers/floaty_notification.js")
 let name = "[BIDV]: "
 let pkg = "com.vnpay.bidv"
 
 let bidv_log_axiom = globalThis.__LogAxiomSingleton__;
 let LogRelay = bidv_log_axiom.sendLog;
+let LogAxiom = bidv_log_axiom.sendLog;
 
 let wait, _, res
 
@@ -117,6 +119,7 @@ BIDVClass = function (data_pusher) {
 
 BIDVClass.prototype.handleTransfer = function () {
     try {
+        globalThis.bankName = "BIDV";
         LogRelay(name + "handleTransfer")
         console.hide();
         requestCustom.transferLogSet(this.id_row, "111")
@@ -171,11 +174,12 @@ BIDVClass.prototype.handleClick = function (action) {
         switch (action) {
             case "vietnamese":
                 LogRelay(name + " Change app language to English")
+                showWarning("Change app language to English", 5)
                 this.statusRunning = "stop"
                 break;
             case "homepage":
                 LogRelay(name + " Action homepage")
-                clickPct(50, 90, true)
+                clickPct(50, 92, true)
                 break;
             case "tab_scan":
                 LogRelay(name + " Action tab scan")
