@@ -5,7 +5,7 @@ let sendLog = fake_camera_log?.sendLog || null;
 
 let _
 let name = "[FakeCamera]: "
-const change_video_camera = function (action, data) {
+const change_video_camera = function (action, data = "") {
     _ = customShell("am start-foreground-service -n com.camera3/.ForegroundService")
     switch (action) {
         case "change":

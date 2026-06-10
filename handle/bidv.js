@@ -4,7 +4,7 @@ let managerApp = require("../helpers/manager_app.js")
 let { clickPct, clickInputText } = require("../helpers/click_custom.js")
 let { sleepCustom } = require("../helpers/utils.js")
 let { fake_qr_code } = require("../helpers/fake_camera.js")
-let { change_ramdom_video } = require("../helpers/fake_camera.js")
+let { change_ramdom_video, change_video_camera } = require("../helpers/fake_camera.js")
 let requestCustom = require("../helpers/request_custom.js")
 let elementSe = require("../helpers/element_se.js")
 let { showWarning } = require("../helpers/floaty_notification.js")
@@ -189,6 +189,7 @@ BIDVClass.prototype.handleClick = function (action) {
             case "transfer_confirm":
                 LogRelay(name + " Action transfer confirm")
                 clickPct(50, 90, true)
+                change_video_camera("clear")
                 change_ramdom_video([this.data_pusher.username, "BIDV"])
                 break;
             case "scan_error":
