@@ -221,7 +221,7 @@ BIDVClass.prototype.handleClick = function (action) {
                 break;
             case "confirm_smart_otp":
                 LogRelay(name + " Action confirm smart otp")
-                clickPct(66, 66, true)
+                clickPct(66, 70, true)
                 sleepCustom(2000)
                 break;
             case "transfer_success":
