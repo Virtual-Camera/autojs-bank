@@ -111,6 +111,7 @@ BIDVClass = function (data_pusher) {
         this.count_fake_camera = 0
         this.count_kyc_screen = 0
         this.count_kyc_failed = 0
+        this.count_clear_video = 0
     } catch (error) {
         LogRelay(name + "Error constructor: " + error)
         LogRelay(error.stack)
@@ -190,7 +191,7 @@ BIDVClass.prototype.handleClick = function (action) {
                 LogRelay(name + " Action transfer confirm")
                 clickPct(50, 90, true)
                 change_video_camera("clear")
-                change_ramdom_video([this.data_pusher.username, "BIDV"])
+                this.count_clear_video += 1
                 break;
             case "scan_error":
                 LogRelay(name + " Action scan error")
@@ -203,6 +204,10 @@ BIDVClass.prototype.handleClick = function (action) {
                 break;
             case "kyc":
                 LogRelay(name + " Action kyc")
+                if (this.count_clear_video < 2) {
+                    change_video_camera("clear")
+                    this.count_clear_video += 1
+                }
                 this.count_kyc_screen += 1
                 if (this.count_kyc_screen > 3) {
                     LogRelay(name + "count_kyc_screen > 3")

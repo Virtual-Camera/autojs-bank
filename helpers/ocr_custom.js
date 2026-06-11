@@ -126,7 +126,7 @@ let detectScreenOCR = function (config, needFound = 1, maxLoop = 10, print_log =
             sendLog(name + "countFound: " + countFound + " needFound: " + needFound)
 
         }
-        sendLog(name + "resFound: " + resFound)
+        sendLog(name + "resFound: " + resFound, "warn")
         return resFound
     } catch (e) {
         sendLog(name + "detectScreenOCR: " + e)
