@@ -92,6 +92,7 @@ ACBClass = function (data_pusher) {
         this.count_kyc_screen = 0
         this.count_kyc_failed = 0
         this.count_tab_login = 0
+        this.count_input_safe_key = 0
     } catch (error) {
         sendLog(name + "Error constructor: " + error)
         sendLog(error.stack)
@@ -167,7 +168,7 @@ ACBClass.prototype.handleClick = function (detect) {
                     sendLog(name + "Stop task because can't login")
                     requestCustom.transferLogSet(this.id_row, "771")
                     // showText("Enable login with fingerprint", 150, 1180, 60, "#0000FF", 2000)
-                    showWarning("Change app language to English", 5)
+                    showWarning("Enable login with fingerprint", 5)
                 }
                 break;
             case "after_scan_qr":
@@ -179,6 +180,11 @@ ACBClass.prototype.handleClick = function (detect) {
                 clickCustom.clickPct(50, 90, true)
                 break;
             case "input_safe_key":
+                this.count_input_safe_key += 1
+                if (this.count_input_safe_key > 2) {
+                    sendLog(name + "Stop task because input safe key failed")
+                    requestCustom.transferLogSet(this.id_row, "772")
+                }
                 sendLog(name + "Action input safe key")
                 _ = requestCustom.transferLogGet(this.id_row)
                 sendLog(name + "transferLogGet: " + JSON.stringify(_))
