@@ -83,6 +83,11 @@ let config_detect = {
         "text": [
             "Insufficient"
         ]
+    },
+    "transfer_pending": {
+        "text": [
+            "pending", "check", "before"
+        ]
     }
 }
 
@@ -204,7 +209,7 @@ ACBClass.prototype.handleClick = function (detect) {
                     let safe_key = this.data_pusher.customData.sOTP
                     clickCustom.clickInputText(safe_key)
                 } else {
-                    sleepCustom(2000)
+                    sleepCustom(5000)
                 }
                 break;
             case "confirm_otp":
@@ -236,9 +241,13 @@ ACBClass.prototype.handleClick = function (detect) {
                 break;
             case "loading":
                 sendLog(name + "Action loading")
-                sleepCustom(2000)
+                sleepCustom(5000)
                 break;
-
+            case "transfer_pending":
+                sendLog(name + "TRANSFER PENDING")
+                requestCustom.transferLogSet(this.id_row, "777")
+                this.statusRunning = "stop"
+                break;
         }
     } catch (error) {
         sendLog(name + "Error handleClick: " + error)
