@@ -186,21 +186,26 @@ ACBClass.prototype.handleClick = function (detect) {
                 break;
             case "input_safe_key":
                 this.count_input_safe_key += 1
-                if (this.count_input_safe_key > 2) {
+                if (this.count_input_safe_key > 5) {
                     sendLog(name + "Stop task because input safe key failed")
                     requestCustom.transferLogSet(this.id_row, "772")
+                    this.statusRunning = "stop"
+                    return false
                 }
                 sendLog(name + "Action input safe key")
                 _ = requestCustom.transferLogGet(this.id_row)
                 sendLog(name + "transferLogGet: " + JSON.stringify(_))
                 if (_['status'] != "111") {
                     sendLog(name + "status != 111")
-                    toast("Status not 111")
                     this.statusRunning = "stop"
                     return false
                 }
-                let safe_key = this.data_pusher.customData.sOTP
-                clickCustom.clickInputText(safe_key)
+                if (this.count_input_safe_key < 2) {
+                    let safe_key = this.data_pusher.customData.sOTP
+                    clickCustom.clickInputText(safe_key)
+                } else {
+                    sleepCustom(2000)
+                }
                 break;
             case "confirm_otp":
                 sendLog(name + "Action confirm otp")
