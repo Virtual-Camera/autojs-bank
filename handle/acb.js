@@ -18,6 +18,11 @@ let config_detect = {
             "Dang nhap"
         ]
     },
+    "loading": {
+        "text": [
+            "Loading", "data"
+        ]
+    },
     "homepage": {
         "text": [
             "Log", "in", "Get", "OTP", "QR"
@@ -223,6 +228,10 @@ ACBClass.prototype.handleClick = function (detect) {
                 showText("Error 1", 150, 1180, 60, "#0000FF", 2000)
                 requestCustom.transferLogSet(this.id_row, "810")
                 this.statusRunning = "stop"
+                break;
+            case "loading":
+                sendLog(name + "Action loading")
+                sleepCustom(2000)
                 break;
 
         }
