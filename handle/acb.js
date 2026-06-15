@@ -5,6 +5,7 @@ let ocrCustom = require("../helpers/ocr_custom.js");
 let { sleepCustom, showText } = require("../helpers/utils.js");
 let clickCustom = require("../helpers/click_custom.js");
 let { fake_qr_code, change_ramdom_video, change_video_camera } = require("../helpers/fake_camera.js")
+let { showWarning } = require("../helpers/floaty_notification.js")
 
 let acb_log_axiom = globalThis.__LogAxiomSingleton__;
 let sendLog = acb_log_axiom.sendLog;
@@ -163,8 +164,10 @@ ACBClass.prototype.handleClick = function (detect) {
             case "tab_login":
                 this.count_tab_login += 1
                 if (this.count_tab_login > 2) {
-                    sendLog(name + "Action tab login")
-                    showText("Enable login with fingerprint", 150, 1180, 60, "#0000FF", 2000)
+                    sendLog(name + "Stop task because can't login")
+                    requestCustom.transferLogSet(this.id_row, "771")
+                    // showText("Enable login with fingerprint", 150, 1180, 60, "#0000FF", 2000)
+                    showWarning("Change app language to English", 5)
                 }
                 break;
             case "after_scan_qr":
