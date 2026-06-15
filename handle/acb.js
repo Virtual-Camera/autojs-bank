@@ -1,4 +1,4 @@
-let { sendLog } = require("../modules/log_axiom.js");
+// let { sendLog } = require("../modules/log_axiom.js");
 let managerApp = require("../helpers/manager_app.js");
 let requestCustom = require("../helpers/request_custom.js");
 let ocrCustom = require("../helpers/ocr_custom.js");
@@ -6,6 +6,8 @@ let { sleepCustom, showText } = require("../helpers/utils.js");
 let clickCustom = require("../helpers/click_custom.js");
 let { fake_qr_code, change_ramdom_video, change_video_camera } = require("../helpers/fake_camera.js")
 
+let acb_log_axiom = globalThis.__LogAxiomSingleton__;
+let sendLog = acb_log_axiom.sendLog;
 let name = "[ACB]: "
 let pkg = "mobile.acb.com.vn"
 
