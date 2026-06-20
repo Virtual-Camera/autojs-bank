@@ -58,7 +58,13 @@ const transferLogSet = function (id_row, status, checkError = false) {
         }
         let res = http.get(url);
         let html = res.body.string();
-        res = JSON.parse(html);
+        try {
+            res = JSON.parse(html);
+        } catch (error) {
+            sendLog(name + "Error parse JSON transferLogSet: " + html)
+            sendLog(name + "Raw response transferLogSet: " + html)
+            return false
+        }
         sendLog(name + "transferLogSet: " + JSON.stringify(res))
         if (res.status) {
             return res.data
